@@ -5,6 +5,6 @@ export default function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    res.status(200).json({ name: 'get webhooks n stuff test' });
+    res.status(200).json({ name: 'test' });
   }
 }
