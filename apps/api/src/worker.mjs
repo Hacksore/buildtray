@@ -1,4 +1,4 @@
-let count = 0;
+import { readRequestBody } from "./util.mjs";
 
 addEventListener("fetch", event => {
   event.respondWith(handleRequest(event.request));
@@ -32,14 +32,16 @@ const websocketHandler = async request => {
 };
 
 async function handleBuildRequest(request) {
-  if (contentType.includes("application/json")) {
-    const { body } = await request.json();
-    console.log(body);
-
-    return new Response(JSON.stringify(body), { status: 200 });
+  const body = await readRequestBody(request);
+  if (!body) {
+    return new Response("Something bad happened?", { status: 500 });
   }
 
-  return new Response(JSON.stringify({ error: "something went wrong" }), { status: 502 });
+  if (body?.action) {
+    console.log("Got action", body.action);
+  }
+
+  return new Response(body);
 }
 
 async function handleRequest(request) {
@@ -48,7 +50,7 @@ async function handleRequest(request) {
     switch (url.pathname) {
       case "/":
         return new Response("build tray api", { status: 200 });
-      case "/build":
+      case "/webhook":
         return handleBuildRequest(request);
       case "/ws":
         return websocketHandler(request);

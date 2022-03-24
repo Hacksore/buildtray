@@ -1,7 +1,16 @@
 name = "buildtray"
-type = "webpack"
+type = "javascript"
 account_id = ""
 workers_dev = true
 route = ""
 zone_id = ""
 compatibility_date = "2022-03-24"
+
+[build]
+command = "npm run build"
+[build.upload]
+format = "modules"
+main = "./worker.mjs"
+
+[durable_objects]
+bindings = []

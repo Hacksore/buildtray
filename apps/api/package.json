@@ -2,9 +2,10 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "module": "./src/worker.mjs",
   "scripts": {
     "build": "webpack",
+    "test": "wrangler dev",
     "dev": "miniflare -p 8080 --watch --env .env",
     "deploy": "wrangler publish"
   },
@@ -12,6 +13,10 @@
   "author": "Hacksore",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.4",
     "miniflare": "^2.3.0",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2"

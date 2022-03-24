@@ -1,6 +1,6 @@
 module.exports = {
   target: "webworker",
-  entry: "./index.js",
+  entry: "./src/worker.mjs",
   mode: "production",
   devtool: "source-map",
 };
