@@ -31,6 +31,17 @@ const websocketHandler = async request => {
   });
 };
 
+async function handleBuildRequest(request) {
+  if (contentType.includes("application/json")) {
+    const { body } = await request.json();
+    console.log(body);
+
+    return new Response(JSON.stringify(body), { status: 200 });
+  }
+
+  return new Response(JSON.stringify({ error: "something went wrong" }), { status: 502 });
+}
+
 async function handleRequest(request) {
   try {
     const url = new URL(request.url);
@@ -38,7 +49,7 @@ async function handleRequest(request) {
       case "/":
         return new Response("build tray api", { status: 200 });
       case "/build":
-        return new Response("TODO", { status: 418 });
+        return handleBuildRequest(request);
       case "/ws":
         return websocketHandler(request);
       default:
