@@ -33,8 +33,5 @@ yarn-error.log*
 .turbo
 
 dist/
-
-wrangler.toml
 .vercel
 
-.env
