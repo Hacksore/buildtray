@@ -8,11 +8,11 @@
   ],
   "scripts": {
     "start": "turbo run dev --parallel",
-    "build": "turbo run build",    
+    "build": "turbo run build",
     "deploy": "vercel deploy && turbo run deploy -w api",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
   },
   "devDependencies": {
     "prettier": "^2.5.1",

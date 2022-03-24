@@ -1,22 +1,24 @@
-import { readRequestBody } from "./util.mjs";
+import { readRequestBody } from "./util";
 
-addEventListener("fetch", event => {
-  event.respondWith(handleRequest(event.request));
-});
+export default {
+  async fetch(request: Request, env: Env) {
+    return handleRequest(request, env);
+  }
+};
 
-async function handleSession(websocket) {
+async function handleSession(websocket: WebSocket) {
   websocket.accept();
-  websocket.addEventListener("message", async ({ data }) => {
+  websocket.addEventListener("message", async ({ data }: any) => {
     websocket.send(JSON.stringify({ hello: "world" }));
   });
 
-  websocket.addEventListener("close", async evt => {
+  websocket.addEventListener("close", async (evt: Event) => {
     // Handle when a client closes the WebSocket connection
     console.log(evt);
   });
 }
 
-const websocketHandler = async request => {
+const websocketHandler = async (request: Request) => {
   const upgradeHeader = request.headers.get("Upgrade");
   if (upgradeHeader !== "websocket") {
     return new Response("Expected websocket", { status: 400 });
@@ -31,8 +33,8 @@ const websocketHandler = async request => {
   });
 };
 
-async function handleBuildRequest(request) {
-  const body = await readRequestBody(request);
+async function handleBuildRequest(request: Request) {
+  const body: any = await readRequestBody(request);
   if (!body) {
     return new Response("Something bad happened?", { status: 500 });
   }
@@ -44,7 +46,7 @@ async function handleBuildRequest(request) {
   return new Response(body);
 }
 
-async function handleRequest(request) {
+async function handleRequest(request: Request, env: Env) {
   try {
     const url = new URL(request.url);
     switch (url.pathname) {
@@ -58,6 +60,6 @@ async function handleRequest(request) {
         return new Response("Not found", { status: 404 });
     }
   } catch (err) {
-    return new Response(err.toString());
+    // return new Response(err.toString());
   }
 }
