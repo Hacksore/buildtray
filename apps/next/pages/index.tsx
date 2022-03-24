@@ -9,6 +9,8 @@ export function Index() {
             <h1>
               <span> Hello there, </span>
               Welcome buildtray 👋
+
+              <a href="https://github.com/apps/buildtray">https://github.com/apps/buildtray</a>
             </h1>
           </div>
         </div>

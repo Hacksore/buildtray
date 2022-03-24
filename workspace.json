@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "next": "apps/next"
+    "next": "apps/next",
+    "websocket": "apps/websocket"
   }
 }

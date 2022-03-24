@@ -1,0 +1,20 @@
+{
+  "root": "apps/websocket",
+  "sourceRoot": "apps/websocket",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "apps/websocket",
+        "outputPath": "dist/apps/websocket"
+      },
+      "configurations": {
+        "production": {}
+      }
+    }
+  },
+  "tags": []
+}
