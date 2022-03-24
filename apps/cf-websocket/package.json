@@ -1,0 +1,13 @@
+{
+  "name": "cf-websocket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "wrangler build",
+    "start": "wrangler dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

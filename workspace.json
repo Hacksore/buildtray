@@ -1,7 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "next": "apps/next",
-    "websocket": "apps/websocket"
+    "cf-websocket": "apps/cf-websocket",
+    "next": "apps/next"
   }
 }

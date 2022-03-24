@@ -1,0 +1,30 @@
+{
+  "root": "apps/cf-websocket",
+  "sourceRoot": "apps/cf-websocket/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/cf-websocket",
+        "main": "apps/cf-websocket/index.js",
+        "tsConfig": "apps/cf-websocket/tsconfig.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "start": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "cf-websocket:start"
+      }
+    }
+  },
+  "tags": []
+}
