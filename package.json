@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "start": "turbo run dev --parallel",
-    "build": "turbo run build",
-    "deploy": "turbo run deploy",
+    "build": "turbo run build",    
+    "deploy": "vercel deploy && turbo run deploy -w api",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
