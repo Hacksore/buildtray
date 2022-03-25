@@ -1,26 +1,40 @@
-import express from "express";
+import express, { Request } from "express";
 import * as functions from "firebase-functions";
-import admin from "firebase-admin";
 import crypto from "crypto";
+import { createRepoEntry } from "./repo";
 
-admin.initializeApp();
+import { db, config } from "./firebase";
+import admin from "firebase-admin";
 
 const app = express();
 const router = express.Router();
-const db = admin.database();
-const config = functions.config();
+
 
 const auth = admin.auth();
 app.use(express.json());
 
-// auth middleware to decode the JWT and validte it
-const authenticate = async (req, res, next) => {
-  const secret = config.app.github;
-  const secureHeader = req.headers["X-Hub-Signature-256"];
+// TODO: mvoe someoneofnseijgoiesjgoishj
+declare module "express" {
+  interface Request {
+    user: any;
+    id: any;
+  }
+}
 
-  if (secureHeader === crypto.createHmac("sha256", secret)) {
-    console.log("came from github no need to auth them");
-    return next();
+// auth middleware to decode the JWT and validte it
+const authenticate = async (req: Request, res, next) => {
+  const secret = config.app.github;
+
+  const secureHeader = req.headers["x-hub-signature-256"];
+
+  if (secureHeader) {
+    const sha256Hasher = crypto.createHmac("sha256", secret);
+    const secretSha = "sha256=" + sha256Hasher.update(JSON.stringify(req.body)).digest("hex");
+
+    if (secureHeader === secretSha) {
+      console.log("came from github no need to auth them");
+      return next();
+    }
   }
 
   if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) {
@@ -69,22 +83,24 @@ router.get("/user", async (req: any, res) => {
 
 router.post("/webhook", async (req, res) => {
   const body = req.body;
-  const fullName = body.repository.full_name;
-  const [user, repo] = fullName.split("/");
+  // const fullName = body.repository.full_name;
+  // const [user, repo] = fullName.split("/");
 
-  if (body.action === "deleted") {
-    db.ref(`repos/${user}/${repo}`).set(null);
+  // if (body.action === "deleted") {
+  //   db.ref(`repos/${user}/${repo}`).set(null);
+  // }
+
+  if (body.action === "added") {
+    createRepoEntry(body.repositories_added);
   }
-  
+
   if (body.action === "created") {
-    db.ref(`repos/${user}/${repo}`).set({
-      installed: true,
-    });
+    createRepoEntry(body.repositories);
   }
 
-  if (body.action === "requested" || body.action === "completed") {
-    db.ref(`repos/${user}/${repo}/builds`).push(body);
-  }
+  // if (body.action === "requested" || body.action === "completed") {
+  //   db.ref(`repos/${user}/${repo}/builds`).push(body);
+  // }
 
   // db.ref(`${id}`).push({
   //   user,
