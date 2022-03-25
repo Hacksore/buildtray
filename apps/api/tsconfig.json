@@ -13,7 +13,7 @@
     "emitDecoratorMetadata": true,
     "declarationDir": "dist",
     "outDir": "dist",
-    "lib": ["es2015"],
+    "lib": ["es2021"],
     "typeRoots": ["node_modules/@types"]
   },
   "include": ["src"],

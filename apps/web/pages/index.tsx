@@ -1,5 +1,4 @@
 import { ref } from "firebase/database";
-
 import { useList } from "react-firebase-hooks/database";
 
 import { getIdToken } from "firebase/auth";
@@ -11,6 +10,7 @@ import { signOut } from "firebase/auth";
 
 import { auth, database } from "./_app";
 import SignIn from "./SignIn";
+import RegisterForm from "../components/RegisterForm";
 
 export default function App() {
   const [user] = useAuthState(auth);
@@ -55,8 +55,12 @@ export default function App() {
 
       {user ? (
         <>
-          <h1>Logged in as {user.displayName}</h1>
+          <h4>Logged in as {user.displayName}</h4>
           <button onClick={() => signOut(auth)}>Logout</button>
+
+          <hr/>
+          <RegisterForm token={token} />
+
         </>
       ) : (
         <SignIn />
