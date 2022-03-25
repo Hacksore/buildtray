@@ -1,7 +1,7 @@
 import express, { Request } from "express";
 import * as functions from "firebase-functions";
 import crypto from "crypto";
-import { createRepoEntry } from "./repo";
+import { createRepoEntry, removeRepoEntry } from "./repo";
 
 import { db, config } from "./firebase";
 import admin from "firebase-admin";
@@ -83,12 +83,10 @@ router.get("/user", async (req: any, res) => {
 
 router.post("/webhook", async (req, res) => {
   const body = req.body;
-  // const fullName = body.repository.full_name;
-  // const [user, repo] = fullName.split("/");
 
-  // if (body.action === "deleted") {
-  //   db.ref(`repos/${user}/${repo}`).set(null);
-  // }
+  if (body.action === "removed") {
+    removeRepoEntry(body.repositories_removed);
+  }
 
   if (body.action === "added") {
     createRepoEntry(body.repositories_added);
@@ -96,6 +94,10 @@ router.post("/webhook", async (req, res) => {
 
   if (body.action === "created") {
     createRepoEntry(body.repositories);
+  }
+
+  if (body.action === "deleted") {
+    removeRepoEntry(body.repositories);
   }
 
   // if (body.action === "requested" || body.action === "completed") {
