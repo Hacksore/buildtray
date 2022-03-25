@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, connectFirestoreEmulator } from "firebase/firestore";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { ref, getDatabase, connectDatabaseEmulator } from "firebase/database";
+
+import { useList } from "react-firebase-hooks/database";
 
 import { getAuth, GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -14,24 +15,19 @@ const firebaseConfig = {
   appId: "1:268408377959:web:d784ad777ed6895554bac2",
 };
 
-// console.log(firebase)
 const app = initializeApp(firebaseConfig);
-const db = getFirestore();
+const database = getDatabase(app);
 
 if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-  connectFirestoreEmulator(db, "localhost", 8080);
+  connectDatabaseEmulator(database, "localhost", 9000);
 }
 
 const auth = getAuth(app);
-const firestore = getFirestore(app);
 
 export default function App() {
   const [user] = useAuthState(auth);
-
-  const [value] = useCollection(collection(firestore, "builds"), {
-    snapshotListenOptions: { includeMetadataChanges: true },
-  });
-
+  const uid = user?.providerData[0]?.uid;
+  const [snapshots, loading, error] = useList(ref(database, uid));
   return (
     <div className="App">
       <header>
@@ -40,11 +36,20 @@ export default function App() {
 
       <section>{user ? <h1>Logged in as {user.displayName}</h1> : <SignIn />}</section>
 
-      {value &&
-        value.docs.map(doc => {
-          const build = doc.data();
-          const { user, repo, status, id } = build;
-          return <div>{user}/{repo} - {status} ({id})</div>;
+      {error && <strong>Error: {error}</strong>}
+      {loading && <span>List: Loading...</span>}
+      {!loading &&
+        snapshots &&
+        snapshots.map(doc => {
+          const items = Object.entries(doc.val());
+          return items.map(([_, v]: [_: any, v: any]) => {
+            const { user, repo, status, id } = v;
+            return (
+              <div key={id}>
+                {user}/{repo} - {status} ({id})
+              </div>
+            );
+          })
         })}
     </div>
   );
@@ -53,6 +58,7 @@ export default function App() {
 function SignIn() {
   const signInWithGoogle = () => {
     const provider = new GithubAuthProvider();
+    provider.addScope("read:user");
     signInWithPopup(auth, provider);
   };
 
