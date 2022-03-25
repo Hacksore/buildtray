@@ -1,3 +1,1 @@
-worker
-.env
-tsconfig.buildinfo
+*.log

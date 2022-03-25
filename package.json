@@ -7,9 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "turbo run dev --parallel",
+    "start": "turbo run start --parallel",
     "build": "turbo run build",
-    "deploy": "vercel deploy && turbo run deploy -w api",
+    "deploy": "vercel deploy && npm run deploy -w api",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""

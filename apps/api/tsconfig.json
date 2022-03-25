@@ -1,11 +1,21 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "lib": ["esnext", "webworker"],
+    "target": "es6",
+    "module": "commonjs",
     "strict": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types"]
-  }
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "lib": ["es2015"],
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
