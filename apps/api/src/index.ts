@@ -10,31 +10,33 @@ const db = admin.database();
 const auth = admin.auth();
 app.use(express.json());
 
-// TODO: make auth work
+// auth middleware to decode the JWT and validte it
 const authenticate = async (req, res, next) => {
   if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) {
-    res.status(403).send("Unauthorized");
+    res.status(401).send("Unauthorized");
     return;
   }
+
   const idToken = req.headers.authorization.split("Bearer ")[1];
   try {
     const decodedIdToken = await auth.verifyIdToken(idToken);
     req.user = decodedIdToken;
-    next();
-    return;
+    return next();
   } catch (e) {
-    res.status(403).send("Unauthorized");
+    console.log(e);
+    res.status(401).send("Unauthorized");
     return;
   }
 };
 
-app.use(authenticate);
+// app.use(authenticate);
+
 router.get("/", async (req, res) => {
   res.send("TODO make api");
 });
 
-router.get("/user", async (req, res) => {
-  res.send("test");
+router.get("/user", async (req: any, res) => {
+  res.json(req.user);
 });
 
 router.post("/webhook", async (req, res) => {

@@ -1,40 +1,66 @@
-import { initializeApp } from "firebase/app";
-import { ref, getDatabase, connectDatabaseEmulator } from "firebase/database";
+import { ref } from "firebase/database";
 
 import { useList } from "react-firebase-hooks/database";
 
-import { getAuth, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { getIdToken } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useQuery } from "react-query";
+import { getUserInfo } from "../api/user";
+import { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDfvbeE4loh8UGNeGV86oAop6n_JOnU1iU",
-  authDomain: "buildtray.firebaseapp.com",
-  projectId: "buildtray",
-  storageBucket: "buildtray.appspot.com",
-  messagingSenderId: "268408377959",
-  appId: "1:268408377959:web:d784ad777ed6895554bac2",
-};
-
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-  connectDatabaseEmulator(database, "localhost", 9000);
-}
-
-const auth = getAuth(app);
+import { auth, database } from "./_app";
+import SignIn from "./SignIn";
 
 export default function App() {
   const [user] = useAuthState(auth);
   const uid = user?.providerData[0]?.uid;
   const [snapshots, loading, error] = useList(ref(database, uid));
+  const [token, setToken] = useState(null);
+
+  // this works but can we abstract this away somehow
+  useEffect(() => {
+    const fetchJwt = async () => {
+      if (!auth?.currentUser) {
+        return;
+      }
+      const jwt = await getIdToken(auth?.currentUser);
+      setToken(jwt);
+    };
+
+    fetchJwt();
+  }, [auth.currentUser]);
+
+  const { isLoading, data } = useQuery(
+    ["userinfo", token],
+    () => {
+      if (token) {
+        return getUserInfo(token);
+      } else {
+        return Promise.resolve({});
+      }
+    },
+    {
+      enabled: !!token,
+    }
+  );
+
   return (
     <div className="App">
       <header>
         <h1>Buildtray</h1>
       </header>
 
-      <section>{user ? <h1>Logged in as {user.displayName}</h1> : <SignIn />}</section>
+      {user && (isLoading ? "Loading session..." : JSON.stringify(data))}
+
+      {user ? (
+        <>
+          <h1>Logged in as {user.displayName}</h1>
+          <button onClick={() => signOut(auth)}>Logout</button>
+        </>
+      ) : (
+        <SignIn />
+      )}
 
       {error && <strong>Error: {error}</strong>}
       {loading && <span>List: Loading...</span>}
@@ -49,25 +75,8 @@ export default function App() {
                 {user}/{repo} - {status} ({id})
               </div>
             );
-          })
+          });
         })}
     </div>
-  );
-}
-
-function SignIn() {
-  const signInWithGoogle = () => {
-    const provider = new GithubAuthProvider();
-    provider.addScope("read:user");
-    signInWithPopup(auth, provider);
-  };
-
-  return (
-    <>
-      <button className="sign-in" onClick={signInWithGoogle}>
-        Sign in with Github
-      </button>
-      <p>wip</p>
-    </>
   );
 }
