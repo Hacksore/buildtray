@@ -5,6 +5,9 @@ import { getAuth } from "firebase/auth";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useState } from "react";
 import { AppProps } from "next/app";
+import { Provider } from "react-redux";
+
+import { store } from "../store"
 
 // TODO: move these to env maybe?
 const firebaseConfig = {
@@ -38,8 +41,10 @@ export default function Main({ Component, pageProps }: AppProps) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
+    </Provider>
   );
 }

@@ -2,7 +2,7 @@
   "name": "api",
   "scripts": {
     "start": "concurrently npm:build:watch npm:server",
-    "server": "firebase emulators:start",
+    "server": "firebase emulators:start --import=seed",
     "build": "tsc",
     "build:watch": "nodemon --watch src -e ts,json --exec tsc",
     "deploy": "firebase deploy"

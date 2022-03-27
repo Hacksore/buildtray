@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useMutation } from "react-query";
 import { subscribeToRepo } from "../api/user";
 
-export default function RegisterForm({ token }) {
+export default function RegisterForm() {
   const [value, setValue] = useState("hacksore/test");
-  const addRepo: any = useMutation(data => subscribeToRepo(token, data));
+  const addRepo: any = useMutation(data => subscribeToRepo(data));
 
   return (
     <>

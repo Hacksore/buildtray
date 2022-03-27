@@ -1,14 +1,13 @@
 import express, { Request } from "express";
 import * as functions from "firebase-functions";
 import crypto from "crypto";
-import { createRepoEntry, removeRepoEntry } from "./repo";
+import { addBuildEntry, createRepoEntry, removeRepoEntry } from "./repo";
 
 import { db, config } from "./firebase";
 import admin from "firebase-admin";
 
 const app = express();
 const router = express.Router();
-
 
 const auth = admin.auth();
 app.use(express.json());
@@ -64,7 +63,13 @@ router.post("/create", async (req: any, res) => {
   const body = req.body;
   const id = req.id;
   const { entity, repo } = body;
-  const path = `user.${id}.repos.${entity}/${repo}`.replaceAll(".", "/");
+  const path = `user.${id}.repos.${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
+
+  const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
+  console.log(`Checking repos/${entity}/${repo} for a valid app insatll`);
+  if (!doc.exists()) {
+    return res.status(500).send(`${entity}/${repo} does not have the app installed`);
+  }
 
   db.ref(path).set({
     notifications: true,
@@ -73,8 +78,28 @@ router.post("/create", async (req: any, res) => {
   res.send(`Enabled notifications to ${path}`);
 });
 
-router.get("/", async (req, res) => {
-  res.send("TODO make api");
+router.get("/repos", async (req: any, res) => {
+  const id = req.id;
+  const path = `user/${id}/repos`;
+
+  const doc = await db.ref(path).once("value");
+
+  if (!doc.exists()) {
+    return res.status(500).send("You have no repos");
+  }
+
+  const repos: any[] = [];
+  for (const [k, v] of Object.entries(doc.val())) {
+    for (const repo of Object.keys(v as any)) {
+      repos.push({
+        repo,
+        entity: k,
+        fullName: `${k}/${repo}`
+      });
+    }
+  }
+
+  return res.json(repos);
 });
 
 router.get("/user", async (req: any, res) => {
@@ -100,16 +125,9 @@ router.post("/webhook", async (req, res) => {
     removeRepoEntry(body.repositories);
   }
 
-  // if (body.action === "requested" || body.action === "completed") {
-  //   db.ref(`repos/${user}/${repo}/builds`).push(body);
-  // }
-
-  // db.ref(`${id}`).push({
-  //   user,
-  //   repo,
-  //   id: body.workflow_run.id,
-  //   status: body.action,
-  // });
+  if (body.action === "requested" || body.action === "completed") {
+    addBuildEntry(body);
+  }
 
   res.send("Webook involed successfully!");
 });
