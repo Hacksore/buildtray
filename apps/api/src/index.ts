@@ -85,7 +85,7 @@ router.get("/repos", async (req: any, res) => {
   const doc = await db.ref(path).once("value");
 
   if (!doc.exists()) {
-    return res.status(500).send("You have no repos");
+    return res.status(200).json([]);
   }
 
   const repos: any[] = [];
@@ -129,7 +129,7 @@ router.post("/webhook", async (req, res) => {
     addBuildEntry(body);
   }
 
-  res.send("Webook involed successfully!");
+  res.send("Webook invoked successfully!");
 });
 
 app.use("/v1", router);

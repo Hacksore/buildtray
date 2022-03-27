@@ -4,7 +4,7 @@ import { signOut } from "firebase/auth";
 
 import { auth, database } from "../main";
 import RegisterForm from "../components/RegisterForm";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getRepos } from "../api/user";
 import { useAppSelector } from "../hooks/redux";
@@ -12,6 +12,8 @@ import firebaseService from "../service/firebase";
 
 export default function Dashboard() {
   const [user, loading, error]: any = useAuthState(auth);
+  const [activeBuilds, setActiveBuilds] = useState<any>([]);
+  const [recentBuilds, setRecentBuilds] = useState<any>([]);
   const authToken = useAppSelector(state => state.auth.authToken);
   const navigate = useNavigate();
 
@@ -23,25 +25,58 @@ export default function Dashboard() {
     }
   }, [user, loading]);
 
-  const { isLoading: isReposLoading, data: allRepos = [] } = useQuery("repos", getRepos, {
+  const { isLoading: isReposLoading, data: allRepos } = useQuery("repos", getRepos, {
     enabled: !!authToken,
+    initialData: [],
   });
 
   // watch for repo builds i've subbed to
   useEffect(() => {
     firebaseService.on("build", data => {
-      console.log("Build", data);
+      setActiveBuilds((currentBuilds: any) => [...currentBuilds, data]);
+
+      // make a demo notification fow now
+      let status;
+      switch(data.status) {
+        case "requested":
+          status = "Build was started ⏱";
+          break;
+        case "completed":
+          status = "Build was completed successfully ✅"
+          break;
+        case "failed":
+          status = "Build has failed 🚨"
+          break;
+        default:
+          status = "Unknown 👽"
+      }
+
+      new Notification(`[Buildtray] ${data.fullName}`, {
+        body: status,
+        icon: "/build.png"
+      });
     });
   }, []);
 
   // create subs for repo builds
   useEffect(() => {
+    // fetch most recent builds
+    const fetchLatestBuilds = async (path: string) => {
+      const builds: any = await firebaseService.getMostRecentBuilds(path);
+      setRecentBuilds((existing: any) => [...existing, ...builds]);
+      console.log(path, builds);
+    }
+
     for (const repo of allRepos) {
+      // subscribe for new changes
       firebaseService.subscribeRepo(repo.fullName);
+
+      // get latest builds
+      fetchLatestBuilds(repo.fullName);
     }
   }, [allRepos]);
 
-  if (isReposLoading || loading || !user) {
+  if (loading || !user) {
     return <h2>loading....</h2>;
   }
 
@@ -57,12 +92,21 @@ export default function Dashboard() {
         </h4>
         <button onClick={() => signOut(auth)}>Logout</button>
         <hr />
-        Test: {`user/${uid}/repos`}
-        <hr />
+
         <RegisterForm />
-        <h2>My repos</h2>
+        <h2>My subscribed repos</h2>
         {allRepos.map((repo: any) => (
-          <p key={repo.fullName}>{JSON.stringify(repo)}</p>
+          <p key={repo.fullName}>{repo.fullName}</p>
+        ))}
+
+        <h2>Incoming builds</h2>
+        {activeBuilds.map((build: any) => (
+          <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
+        ))}
+
+        <h2>Recent builds</h2>
+        {recentBuilds.map((build: any) => (
+          <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
         ))}
       </>
     </div>

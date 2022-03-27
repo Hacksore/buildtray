@@ -3,5 +3,15 @@
   "github": {
     "silent": true
   },
-  "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }]
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "https://us-central1-buildtray.cloudfunctions.net"
+    },
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
+    }
+  ]
 }

@@ -10,6 +10,7 @@
     "start": "turbo run start --parallel",
     "build": "turbo run build",
     "deploy": "vercel deploy && npm run deploy -w api",
+    "deploy:web": "vercel deploy",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""

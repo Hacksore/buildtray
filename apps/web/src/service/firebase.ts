@@ -29,18 +29,45 @@ class FirebaseService extends EventEmitter {
     const localRef = ref(database, buildPath);
     console.log("subscribing to changes for", buildPath);
 
-    const time = Math.floor(+new Date()/1000);
-    console.log("Starting search from timestamp", time);
+    const time = Math.floor(+new Date() / 1000);
     const updatedRepo = query(localRef, orderByChild("createdAt"), startAfter(time), limitToLast(1));
 
     onChildAdded(updatedRepo, (snapshot: DataSnapshot) => {
-      this.emit("build", snapshot.val());
-      console.log("add");
+      this.emit("build", {
+        ...snapshot.val(),
+        fullName: path,
+      });
     });
 
     onChildChanged(updatedRepo, (snapshot: DataSnapshot) => {
-      this.emit("build", snapshot.val());
-      console.log("Change")
+      this.emit("build", {
+        ...snapshot.val(),
+        fullName: path,
+      });
+    });
+  }
+
+  getMostRecentBuilds(path: string) {
+    return new Promise((resolve, reject) => {
+      const buildPath = `repos/${path}/builds`;
+      const localRef = ref(database, buildPath);
+      const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(10));
+
+      onValue(updatedRepo, (snapshot: DataSnapshot) => {
+        const val = snapshot.val();
+
+        if (!val) {
+          return resolve([]);
+        }
+
+        const fixed = Object.entries(val).map(([k, v]: [string, any]) => ({
+          id: k,
+          fullName: path,
+          ...v,
+        }));
+
+        resolve(fixed);
+      });
     });
   }
 }
