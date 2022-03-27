@@ -68,14 +68,14 @@ router.post("/create", async (req: any, res) => {
   const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
   console.log(`Checking repos/${entity}/${repo} for a valid app insatll`);
   if (!doc.exists()) {
-    return res.status(500).send(`${entity}/${repo} does not have the app installed`);
+    return res.status(500).send({ error: `${entity}/${repo} does not have the app installed` });
   }
 
   db.ref(path).set({
     notifications: true,
   });
 
-  res.send(`Enabled notifications to ${path}`);
+  res.send({ message: `Enabled notifications to ${path}` });
 });
 
 router.get("/repos", async (req: any, res) => {
@@ -94,7 +94,7 @@ router.get("/repos", async (req: any, res) => {
       repos.push({
         repo,
         entity: k,
-        fullName: `${k}/${repo}`
+        fullName: `${k}/${repo}`,
       });
     }
   }

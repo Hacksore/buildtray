@@ -1,0 +1,20 @@
+{
+  "rules": {
+    ".read": true,
+    "repos": {
+      "$entity": {
+        "$repo": {
+          "builds": {
+            ".indexOn": ["createdAt"]
+          }
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
+    }
+  }
+}

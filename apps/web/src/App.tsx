@@ -1,45 +1,44 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useAppDispatch } from "./hooks/redux";
+import { getIdToken } from "firebase/auth";
+import { useEffect } from "react";
+import { appSlice } from "./reducers/authReducer";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./main";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Dashboard from "./containers/Dashboard";
+import SignIn from "./containers/SignIn";
 
-function App() {
-  const [count, setCount] = useState(0)
+const { setAuthToken } = appSlice.actions;
+
+export default function App() {
+  const [user, loading] = useAuthState(auth);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (loading) {
+      // maybe trigger a loading screen
+      return;
+    }
+
+    const fetchUserAuth = async () => {
+      if (user) {
+        const jwt = await getIdToken(user);
+        dispatch(setAuthToken(jwt));
+        return navigate("/dashboard");
+      }
+
+      return navigate("/login");
+    };
+
+    fetchUserAuth();
+  }, [user, loading]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<h2>Main landing page</h2>} />
+      <Route path="/login" element={<SignIn />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
 }
-
-export default App

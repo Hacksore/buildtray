@@ -12,9 +12,12 @@ export const createRepoEntry = items => {
 
 export const addBuildEntry = item => {
   const fullName = item.repository.full_name.replaceAll(".", "-").toLowerCase();
-
-  db.ref(`repos/${fullName}/builds`).push({
+  const id = item.workflow_run.id;
+  db.ref(`repos/${fullName}/builds/${id}`).set({
+    createdAt: Math.floor(+new Date()/1000),
     status: item.action,
+    id: item.workflow_run.id,
+    branch: item.workflow_run.head_branch
   });
 };
 
