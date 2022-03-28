@@ -30,6 +30,18 @@ export const subscribeToRepo = (data: any) => {
   }
 };
 
+export const getAllUserRepos = () => {
+  try {
+    return _request("/api/v1/repos/user", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (err) {
+    return Promise.reject("Error");
+  }
+};
+
 export const _request = async (path: string, options = {} as any) => {
   const state = store.getState();
   const mergedOptions = {
@@ -37,6 +49,7 @@ export const _request = async (path: string, options = {} as any) => {
     headers: {
       ...(options?.headers || {}),
       Authorization: `Bearer ${state.auth.authToken}`,
+      "X-Github-Auth": state.auth.githubAccessToken,
     },
   };
   try {

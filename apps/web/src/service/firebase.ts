@@ -47,6 +47,11 @@ class FirebaseService extends EventEmitter {
     });
   }
 
+  /**
+   * Sorta don't know if this makes full sense to be a "service"
+   * @param path a path to the item in the database
+   * @returns Promise<any[]>
+   */
   getMostRecentBuilds(path: string) {
     return new Promise((resolve, reject) => {
       const buildPath = `repos/${path}/builds`;

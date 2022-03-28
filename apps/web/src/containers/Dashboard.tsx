@@ -6,7 +6,7 @@ import { auth, database } from "../main";
 import RegisterForm from "../components/RegisterForm";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRepos } from "../api/user";
+import { getAllUserRepos, getRepos } from "../api/user";
 import { useAppSelector } from "../hooks/redux";
 import firebaseService from "../service/firebase";
 
@@ -19,6 +19,7 @@ export default function Dashboard() {
 
   const uid = user?.providerData[0]?.uid;
 
+  // TODO: this should be handleded eslewhere
   useEffect(() => {
     if (!user && !loading) {
       navigate("/login");
@@ -30,6 +31,15 @@ export default function Dashboard() {
     initialData: [],
   });
 
+  // const { isLoading: isReposLoading, data: installedRepos } = useQuery("installed-repos", getInstalledRepos, {
+  //   enabled: !!authToken,
+  //   initialData: [],
+  // });
+
+  useEffect(() => {
+    getAllUserRepos();
+  }, []);
+
   // watch for repo builds i've subbed to
   useEffect(() => {
     firebaseService.on("build", data => {
@@ -37,23 +47,23 @@ export default function Dashboard() {
 
       // make a demo notification fow now
       let status;
-      switch(data.status) {
+      switch (data.status) {
         case "requested":
           status = "Build was started ⏱";
           break;
         case "completed":
-          status = "Build was completed successfully ✅"
+          status = "Build was completed successfully ✅";
           break;
         case "failed":
-          status = "Build has failed 🚨"
+          status = "Build has failed 🚨";
           break;
         default:
-          status = "Unknown 👽"
+          status = "Unknown 👽";
       }
 
       new Notification(`[Buildtray] ${data.fullName}`, {
         body: status,
-        icon: "/build.png"
+        icon: "/build.png",
       });
     });
   }, []);
@@ -65,7 +75,7 @@ export default function Dashboard() {
       const builds: any = await firebaseService.getMostRecentBuilds(path);
       setRecentBuilds((existing: any) => [...existing, ...builds]);
       console.log(path, builds);
-    }
+    };
 
     for (const repo of allRepos) {
       // subscribe for new changes
@@ -92,18 +102,24 @@ export default function Dashboard() {
         </h4>
         <button onClick={() => signOut(auth)}>Logout</button>
         <hr />
-
+        Install this application to your repo to be able for uses to subscribe to build events
+        <a target="_blank" rel="noreferrer" href="https://github.com/apps/buildtray">
+          https://github.com/apps/buildtray
+        </a>
+        <hr />
         <RegisterForm />
+        <h2>Install repos</h2>
+        {allRepos.map((repo: any) => (
+          <p key={repo.fullName}>{repo.fullName}</p>
+        ))}
         <h2>My subscribed repos</h2>
         {allRepos.map((repo: any) => (
           <p key={repo.fullName}>{repo.fullName}</p>
         ))}
-
         <h2>Incoming builds</h2>
         {activeBuilds.map((build: any) => (
           <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
         ))}
-
         <h2>Recent builds</h2>
         {recentBuilds.map((build: any) => (
           <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>

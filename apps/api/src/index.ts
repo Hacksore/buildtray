@@ -1,9 +1,9 @@
 import express, { Request } from "express";
 import * as functions from "firebase-functions";
 import crypto from "crypto";
-import { addBuildEntry, createRepoEntry, removeRepoEntry } from "./repo";
+import { addBuildEntry, createRepoEntry, getUsersRepos, removeRepoEntry } from "./repo";
 
-import { db, config } from "./firebase";
+import { db, config } from "./firebase.js";
 import admin from "firebase-admin";
 
 const app = express();
@@ -44,6 +44,7 @@ const authenticate = async (req: Request, res, next) => {
   const idToken = req.headers.authorization.split("Bearer ")[1];
   try {
     const decodedIdToken = await auth.verifyIdToken(idToken);
+
     req.user = decodedIdToken;
     req.id = decodedIdToken.firebase.identities["github.com"][0];
 
@@ -102,6 +103,22 @@ router.get("/repos", async (req: any, res) => {
   return res.json(repos);
 });
 
+// TODO: paginate?
+router.get("/installed/repos", async (req: any, res) => {
+  const doc = await db.ref("repos").limitToLast(10).once("value");
+
+  if (!doc.exists()) {
+    return res.status(200).json([]);
+  }
+
+  return res.json(doc.val());
+});
+
+router.get("/repos/user", async (req: any, res) => {
+  const token = req.headers["x-github-token"];
+  return res.json(await getUsersRepos(token));
+});
+
 router.get("/user", async (req: any, res) => {
   res.json(req.user);
 });
@@ -134,4 +151,4 @@ router.post("/webhook", async (req, res) => {
 
 app.use("/v1", router);
 
-exports.api = functions.https.onRequest(app);
+export const api = functions.https.onRequest(app);
