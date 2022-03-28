@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
 import authReducer from "./reducers/authReducer";
+import { saveState } from "./util/state";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -23,3 +24,9 @@ export type HistoryState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AuthState, unknown, Action<string>>;
+
+// sub to store for changes to save to localstorage
+store.subscribe(() => {
+  const state = store.getState();
+  saveState(state.auth);
+});

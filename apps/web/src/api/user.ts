@@ -52,6 +52,7 @@ export const _request = async (path: string, options = {} as any) => {
       "X-Github-Auth": state.auth.githubAccessToken,
     },
   };
+  
   try {
     const repsonse = fetch(path, mergedOptions).then(res => res.json());
     return repsonse;

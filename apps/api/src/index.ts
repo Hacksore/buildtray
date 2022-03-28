@@ -42,7 +42,7 @@ const authenticate = async (req: Request, res, next) => {
   }
 
   const idToken = req.headers.authorization.split("Bearer ")[1];
-  try {
+  try {   
     const decodedIdToken = await auth.verifyIdToken(idToken);
 
     req.user = decodedIdToken;
@@ -115,7 +115,7 @@ router.get("/installed/repos", async (req: any, res) => {
 });
 
 router.get("/repos/user", async (req: any, res) => {
-  const token = req.headers["x-github-token"];
+  const token = req.headers["x-github-auth"];
   return res.json(await getUsersRepos(token));
 });
 

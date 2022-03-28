@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { loadState } from "../util/state";
 export interface AppState {
-  authToken: any,
-  githubAccessToken: string | null,
-  user: any,
+  authToken: any;
+  githubAccessToken: string | null;
+  user: any;
 }
 
-const initialState: AppState = {
+const initialState: AppState = loadState({
   authToken: null,
   githubAccessToken: null,
   user: null,
-};
+});
 
 export const appSlice = createSlice({
   name: "auth",

@@ -13,6 +13,7 @@ export default function SignIn() {
     const result = await signInWithPopup(auth, provider);
     const credential = GithubAuthProvider.credentialFromResult(result);
 
+    console.log(credential, result);
     // if we have a token put it in the ducks
     if (credential && credential.accessToken) {
       dispatch(setGithubAccessToken(credential.accessToken));

@@ -74,7 +74,6 @@ export default function Dashboard() {
     const fetchLatestBuilds = async (path: string) => {
       const builds: any = await firebaseService.getMostRecentBuilds(path);
       setRecentBuilds((existing: any) => [...existing, ...builds]);
-      console.log(path, builds);
     };
 
     for (const repo of allRepos) {

@@ -40,14 +40,15 @@ export const getUsersRepos = async token => {
   try {
     const response: any = await got("https://api.github.com/user/repos", {
       headers: {
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     }).json();
-
+    
     return response.map(item => ({
       fullName: item.full_name,
     }));
   } catch (err) {
+    console.log(err);
     return null;
   }
 };
