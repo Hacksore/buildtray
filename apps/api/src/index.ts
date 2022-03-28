@@ -42,7 +42,7 @@ const authenticate = async (req: Request, res, next) => {
   }
 
   const idToken = req.headers.authorization.split("Bearer ")[1];
-  try {   
+  try {
     const decodedIdToken = await auth.verifyIdToken(idToken);
 
     req.user = decodedIdToken;
@@ -77,6 +77,27 @@ router.post("/create", async (req: any, res) => {
   });
 
   res.send({ message: `Enabled notifications to ${path}` });
+});
+
+router.post("/login", async (req: any, res) => {
+  const { token } = req.body;
+  const id = req.id;
+  const path = `user/${id}`;
+
+  const doc = await db.ref(path).once("value");
+  if (!doc.exists()) {
+    
+    const repos = await getUsersRepos(token);
+    const dict = {};
+    // ".", "#", "$", "/", "[", or "]
+    repos.forEach(item => dict[item.fullName.replace(/\.|\#|\$|\/|\[|\]/g, "-")] = true);
+    console.log(dict);
+    db.ref(path).set(dict);
+    
+    return res.send({ message: `User has been setup` });
+  }
+
+  res.send({ message: "????" });
 });
 
 router.get("/repos", async (req: any, res) => {

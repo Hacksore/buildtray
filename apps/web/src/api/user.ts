@@ -8,6 +8,10 @@ export const getUserInfo = async () => {
   }
 };
 
+/**
+ * All the user repos that have been subbed
+ * @returns 
+ */
 export const getRepos = () => {
   try {
     return _request("/api/v1/repos");
@@ -30,6 +34,10 @@ export const subscribeToRepo = (data: any) => {
   }
 };
 
+/**
+ * All repos the users can see
+ * @returns 
+ */
 export const getAllUserRepos = () => {
   try {
     return _request("/api/v1/repos/user", {
@@ -40,6 +48,16 @@ export const getAllUserRepos = () => {
   } catch (err) {
     return Promise.reject("Error");
   }
+};
+
+export const initialSignin = (token: string) => {
+  _request("/api/v1/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token }),
+  });
 };
 
 export const _request = async (path: string, options = {} as any) => {

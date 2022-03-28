@@ -37,18 +37,30 @@ export const removeRepoEntry = items => {
  * @returns 
  */
 export const getUsersRepos = async token => {
-  try {
-    const response: any = await got("https://api.github.com/user/repos", {
+
+  let index = 1;
+  const results: any[] = [];
+  const maxPerPage = 100;
+  while (true) {
+    const res: any = await got(`https://api.github.com/user/repos?per_page=${maxPerPage}&page=${index}`, {
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     }).json();
-    
-    return response.map(item => ({
-      fullName: item.full_name,
-    }));
-  } catch (err) {
-    console.log(err);
-    return null;
+
+    res.forEach(item => {
+      results.push({
+        fullName: item.full_name
+      });
+    });
+
+    if (res.length < maxPerPage) {
+      break;
+    }
+
+    index++;
   }
+
+  return results;
 };

@@ -2,7 +2,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useQuery } from "react-query";
 import { signOut } from "firebase/auth";
 
-import { auth, database } from "../main";
+import { auth } from "../main";
 import RegisterForm from "../components/RegisterForm";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -31,14 +31,9 @@ export default function Dashboard() {
     initialData: [],
   });
 
-  // const { isLoading: isReposLoading, data: installedRepos } = useQuery("installed-repos", getInstalledRepos, {
-  //   enabled: !!authToken,
-  //   initialData: [],
-  // });
-
-  useEffect(() => {
-    getAllUserRepos();
-  }, []);
+  const { isLoading: isAllReposLoading, data: allUserRepos } = useQuery("alllRepos", getAllUserRepos, {
+    initialData: [],
+  });
 
   // watch for repo builds i've subbed to
   useEffect(() => {
@@ -123,6 +118,14 @@ export default function Dashboard() {
         {recentBuilds.map((build: any) => (
           <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
         ))}
+        <h2>All repos</h2>
+        <div style={{ width: 1200 }}>
+          {allUserRepos.map((repo: any) => (
+            <div style={{ width: 200, height: 100, background: "red", float: "left", marginRight: 10 }} key={repo.fullName}>
+              {repo.fullName}
+            </div>
+          ))}
+        </div>
       </>
     </div>
   );
