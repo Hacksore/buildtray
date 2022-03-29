@@ -7,6 +7,7 @@ import { auth } from "./main";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./containers/Dashboard";
 import SignIn from "./containers/SignIn";
+import Header from "./components/Header";
 
 const { setAuthToken } = appSlice.actions;
 
@@ -35,10 +36,13 @@ export default function App() {
   }, [user, loading]);
 
   return (
+    <>
+    <Header />
     <Routes>
       <Route path="/" element={<h2>Main landing page</h2>} />
       <Route path="/login" element={<SignIn />} />
       <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
+    </>
   );
 }

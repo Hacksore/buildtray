@@ -1,5 +1,5 @@
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { signOut } from "firebase/auth";
 
 import { auth, queryClient } from "../main";
@@ -9,12 +9,18 @@ import { useNavigate } from "react-router-dom";
 import { getAllUserRepos, getSubscribedRepos } from "../api/user";
 import { useAppSelector } from "../hooks/redux";
 import firebaseService from "../service/firebase";
+import { Button, Grid, Tooltip } from "@mui/material";
+import { Box } from "@mui/system";
+import { darken } from "@mui/system";
+import { subscribeToRepo } from "../api/user";
 
 export default function Dashboard() {
   const [user, loading, error]: any = useAuthState(auth);
   const [activeBuilds, setActiveBuilds] = useState<any>([]);
   const [recentBuilds, setRecentBuilds] = useState<any>([]);
   const authToken = useAppSelector(state => state.auth.authToken);
+  const subscribeRepo: any = useMutation(data => subscribeToRepo(data));
+
   const navigate = useNavigate();
 
   const uid = user?.providerData[0]?.uid;
@@ -85,47 +91,80 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="App">
-      <header>
-        <h1>Buildtray</h1>
-      </header>
-
-      <>
-        <h4>
-          Logged in as {user.displayName} {uid}
-        </h4>
-        <button onClick={() => signOut(auth)}>Logout</button>
-        <hr />
-        Install this application for people to subscribe to build events {" "}
-        <a target="_blank" rel="noreferrer" href="https://github.com/apps/buildtray">
-          https://github.com/apps/buildtray
-        </a>
-        <hr />
-        <RegisterForm />
-        <h2>My subscribed repos</h2>
-        {subscribedRepos.map((repo: any) => (
-          <p key={repo.fullName}>{repo.fullName}</p>
-        ))}
-        <h2>Incoming builds</h2>
-        {activeBuilds.map((build: any) => (
-          <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
-        ))}
-        <h2>Recent builds</h2>
-        {recentBuilds.map((build: any) => (
-          <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
-        ))}
-        <h2>All repos</h2>
-        <div style={{ width: 1200 }}>
-          {allUserRepos.map((repo: any) => (
-            <div
-              style={{ width: 200, height: 100, background: "red", float: "left", marginRight: 10 }}
-              key={repo.fullName}
+    <>
+      <h4>
+        Logged in as {user.displayName} {uid}
+      </h4>
+      Install this application for people to subscribe to build events{" "}
+      <a target="_blank" rel="noreferrer" href="https://github.com/apps/buildtray">
+        https://github.com/apps/buildtray
+      </a>
+      <hr />
+      <h2>My subscribed repos</h2>
+      {subscribedRepos.map((repo: any) => (
+        <p key={repo.fullName}>{repo.fullName}</p>
+      ))}
+      <h2>Incoming builds</h2>
+      {activeBuilds.map((build: any) => (
+        <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
+      ))}
+      <h2>Recent builds</h2>
+      {recentBuilds.map((build: any) => (
+        <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
+      ))}
+      <Grid container>
+        {allUserRepos.map((repo: any) => (
+          <Grid item key={repo.fullName}>
+            <Box
+              sx={{
+                backgroundColor: theme => darken(theme.palette.background.default, 0.3),
+                width: 300,
+                height: 100,
+                margin: 1,
+                padding: 1,
+                display: "flex",
+                fontWeight: "bold",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
             >
-              {repo.fullName}
-            </div>
-          ))}
-        </div>
-      </>
-    </div>
+              <Tooltip title={repo.fullName}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    width: 250,
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                >
+                  {repo.fullName}
+                </Box>
+              </Tooltip>
+
+              <Button
+                onClick={() => {
+                  const [entity, name] = repo.fullName.split("/");
+                  subscribeRepo.mutate(
+                    {
+                      entity,
+                      repo: name,
+                    },
+                    {
+                      onSuccess: () => {
+                        queryClient.invalidateQueries("subscribedRepos");
+                      },
+                    }
+                  );
+                }}
+              >
+                Subscribe
+              </Button>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
 import { initialSignin } from "../api/user";
 import { useAppDispatch } from "../hooks/redux";
@@ -22,11 +23,22 @@ export default function SignIn() {
   };
 
   return (
-    <>
-      <button className="sign-in" onClick={signInWithGithub}>
-        Sign in with Github
-      </button>
-      <p>Login to view all the repos you have the app installed on</p>
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        alignContent: "center",
+      }}
+    >
+      <Grid container alignItems="center" direction="row">
+        <Grid item xs={12}>
+          <Button className="sign-in" onClick={signInWithGithub}>
+            Sign in with Github
+          </Button>
+          <p>Login to view all the repos you have the app installed on</p>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

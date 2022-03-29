@@ -9,6 +9,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, connectDatabaseEmulator } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { BrowserRouter } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 // TODO: move these to env maybe?
 const firebaseConfig = {
@@ -41,7 +43,10 @@ ReactDOM.render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <App />
+          </ThemeProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
