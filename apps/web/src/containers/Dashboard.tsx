@@ -2,11 +2,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useQuery } from "react-query";
 import { signOut } from "firebase/auth";
 
-import { auth } from "../main";
+import { auth, queryClient } from "../main";
 import RegisterForm from "../components/RegisterForm";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllUserRepos, getRepos } from "../api/user";
+import { getAllUserRepos, getSubscribedRepos } from "../api/user";
 import { useAppSelector } from "../hooks/redux";
 import firebaseService from "../service/firebase";
 
@@ -26,12 +26,12 @@ export default function Dashboard() {
     }
   }, [user, loading]);
 
-  const { isLoading: isReposLoading, data: allRepos } = useQuery("repos", getRepos, {
+  const { isLoading: isReposLoading, data: subscribedRepos } = useQuery("subscribedRepos", getSubscribedRepos, {
     enabled: !!authToken,
     initialData: [],
   });
 
-  const { isLoading: isAllReposLoading, data: allUserRepos } = useQuery("alllRepos", getAllUserRepos, {
+  const { isLoading: isAllReposLoading, data: allUserRepos } = useQuery("allUserRepos", getAllUserRepos, {
     initialData: [],
   });
 
@@ -71,14 +71,14 @@ export default function Dashboard() {
       setRecentBuilds((existing: any) => [...existing, ...builds]);
     };
 
-    for (const repo of allRepos) {
+    for (const repo of subscribedRepos) {
       // subscribe for new changes
       firebaseService.subscribeRepo(repo.fullName);
 
       // get latest builds
       fetchLatestBuilds(repo.fullName);
     }
-  }, [allRepos]);
+  }, [subscribedRepos]);
 
   if (loading || !user) {
     return <h2>loading....</h2>;
@@ -96,18 +96,14 @@ export default function Dashboard() {
         </h4>
         <button onClick={() => signOut(auth)}>Logout</button>
         <hr />
-        Install this application to your repo to be able for uses to subscribe to build events
+        Install this application for people to subscribe to build events {" "}
         <a target="_blank" rel="noreferrer" href="https://github.com/apps/buildtray">
           https://github.com/apps/buildtray
         </a>
         <hr />
         <RegisterForm />
-        <h2>Install repos</h2>
-        {allRepos.map((repo: any) => (
-          <p key={repo.fullName}>{repo.fullName}</p>
-        ))}
         <h2>My subscribed repos</h2>
-        {allRepos.map((repo: any) => (
+        {subscribedRepos.map((repo: any) => (
           <p key={repo.fullName}>{repo.fullName}</p>
         ))}
         <h2>Incoming builds</h2>
@@ -121,7 +117,10 @@ export default function Dashboard() {
         <h2>All repos</h2>
         <div style={{ width: 1200 }}>
           {allUserRepos.map((repo: any) => (
-            <div style={{ width: 200, height: 100, background: "red", float: "left", marginRight: 10 }} key={repo.fullName}>
+            <div
+              style={{ width: 200, height: 100, background: "red", float: "left", marginRight: 10 }}
+              key={repo.fullName}
+            >
               {repo.fullName}
             </div>
           ))}

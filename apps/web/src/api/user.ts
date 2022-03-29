@@ -4,7 +4,7 @@ import { store } from "../store";
  * All the user repos that have been subbed
  * @returns 
  */
-export const getRepos = () => {
+export const getSubscribedRepos = () => {
   try {
     return _request("/repos/subscribed");
   } catch (err) {
