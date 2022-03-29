@@ -1,20 +1,12 @@
 import { store } from "../store";
 
-export const getUserInfo = async () => {
-  try {
-    return _request("/api/v1/user");
-  } catch (err) {
-    return Promise.reject("Error");
-  }
-};
-
 /**
  * All the user repos that have been subbed
  * @returns 
  */
 export const getRepos = () => {
   try {
-    return _request("/api/v1/repos");
+    return _request("/repos/subscribed");
   } catch (err) {
     return Promise.reject("Error");
   }
@@ -22,7 +14,7 @@ export const getRepos = () => {
 
 export const subscribeToRepo = (data: any) => {
   try {
-    return _request("/api/v1/create", {
+    return _request("/repo/subscribe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +32,7 @@ export const subscribeToRepo = (data: any) => {
  */
 export const getAllUserRepos = () => {
   try {
-    return _request("/api/v1/repos/user", {
+    return _request("/repos/all", {
       headers: {
         "Content-Type": "application/json",
       },
@@ -51,7 +43,7 @@ export const getAllUserRepos = () => {
 };
 
 export const initialSignin = (token: string) => {
-  _request("/api/v1/login", {
+  _request("/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -72,7 +64,7 @@ export const _request = async (path: string, options = {} as any) => {
   };
   
   try {
-    const repsonse = fetch(path, mergedOptions).then(res => res.json());
+    const repsonse = fetch("/api/v1" + path, mergedOptions).then(res => res.json());
     return repsonse;
   } catch (err) {
     return Promise.reject("Error");

@@ -5,7 +5,8 @@
     "build:watch": "rollup -w --watch.include src/**/*.ts -c rollup.config.js",
     "server": "firebase emulators:start --import=seed",
     "build": "rimraf ./dist/**/* && rollup -c rollup.config.js",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "firebase deploy --only functions",
+    "export": "firebase emulators:export seed"
   },
   "engines": {
     "node": "16"

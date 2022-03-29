@@ -32,16 +32,16 @@ export const removeRepoEntry = items => {
 };
 
 /**
- * 
+ *
  * @param token Github access token
- * @returns 
+ * @returns
  */
 export const getUsersRepos = async token => {
-
   let index = 1;
   const results: any[] = [];
   const maxPerPage = 100;
   while (true) {
+    // TODO: one issue is that this only works for public repos with the token we have
     const res: any = await got(`https://api.github.com/user/repos?per_page=${maxPerPage}&page=${index}`, {
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const getUsersRepos = async token => {
 
     res.forEach(item => {
       results.push({
-        fullName: item.full_name
+        fullName: item.full_name,
       });
     });
 
