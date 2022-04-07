@@ -1,9 +1,7 @@
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useMutation, useQuery } from "react-query";
-import { signOut } from "firebase/auth";
 
 import { auth, queryClient } from "../main";
-import RegisterForm from "../components/RegisterForm";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllUserRepos, getSubscribedRepos } from "../api/user";
