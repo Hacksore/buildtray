@@ -1,4 +1,4 @@
-import { Tray, Menu, nativeTheme } from "electron";
+import { Tray, Menu, nativeTheme, BrowserWindow } from "electron";
 import pkg from "../../../../package.json";
 import path from "path";
 
@@ -6,12 +6,13 @@ import { app } from ".";
 
 const APP_BASE_PATH = app.isPackaged
   ? path.resolve(`${__dirname}/../renderer`)
-  : path.resolve(`${__dirname}/../../public`);
+  : path.resolve(`${__dirname}/../../packages/renderer/public`);
 
 const trayIconTheme = nativeTheme.shouldUseDarkColors ? "light" : "dark";
-const trayIconPath = `${APP_BASE_PATH}/img/icon-${trayIconTheme}.png`;
+const trayIconPath = `${APP_BASE_PATH}/image/icon-${trayIconTheme}.png`;
 
-const tray = new Tray(trayIconPath);
+let trayWin: BrowserWindow | null = null;
+
 const contextMenu = Menu.buildFromTemplate([
   {
     label: `Buildtray ${pkg.version}`,
@@ -20,9 +21,53 @@ const contextMenu = Menu.buildFromTemplate([
   {
     type: "separator",
   },
+  {
+    label: `This is in progress...`,
+    enabled: false,
+  },
 ]);
 
+// TODO: createTrayWindow and createTree could use a refactor to combime them to a util function
+async function createTrayWindow() {
+  trayWin = new BrowserWindow({
+    title: "Main window",
+    frame: false,
+    show: false,
+    width: 300,
+    height: 400,
+    webPreferences: {
+      preload: path.join(__dirname, "../preload/index.cjs"),
+    },
+  });
+
+  if (app.isPackaged) {
+    trayWin.loadFile(path.join(__dirname, "../renderer/index.html"));
+  } else {
+    const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
+    trayWin.loadURL(`${url}#/tray`);
+  }
+}
+
 app.whenReady().then(() => {
+  // create the window when app laods
+  createTrayWindow();
+  const tray = new Tray(trayIconPath);
+
   tray.setToolTip("Buildtray");
-  tray.setContextMenu(contextMenu);
+  // tray.setContextMenu(contextMenu);
+
+  tray.addListener("click", () => {
+
+    // show it
+    trayWin?.show();
+
+    // focus it
+    trayWin?.focus();
+
+    // move it to the menubar position
+    const { x, y } = tray.getBounds();
+    // const { width, height } = trayWin?.getBounds();
+    trayWin?.setPosition(x - 300/2, 20);
+    
+  });
 });

@@ -1,15 +1,10 @@
 import { builtinModules } from 'module'
 import { defineConfig } from 'vite'
-import esmodule from 'vite-plugin-esmodule'
 import pkg from '../../package.json'
 
 export default defineConfig({
   root: __dirname,
-  plugins: [
-    esmodule([
-      'execa',
-    ]),
-  ],
+  plugins: [],
   build: {
     outDir: '../../dist/main',
     emptyOutDir: true,
@@ -24,6 +19,7 @@ export default defineConfig({
       external: [
         'electron',
         ...builtinModules,
+        // @ts-ignore
         ...Object.keys(pkg.dependencies || {}),
       ],
     },
