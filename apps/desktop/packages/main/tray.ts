@@ -41,10 +41,9 @@ async function createTrayWindow() {
   });
 
   if (app.isPackaged) {
-    trayWin.loadFile(path.join(__dirname, "../renderer/index.html"));
-  } else {
-    const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
-    trayWin.loadURL(`${url}#/tray`);
+    trayWin.loadURL("https://buildtray.com");
+  } else {    
+    trayWin.loadURL("http://localhost:3000/tray");
   }
 }
 

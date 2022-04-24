@@ -26,10 +26,9 @@ async function createWindow() {
   });
 
   if (app.isPackaged) {
-    win.loadFile(join(__dirname, "../renderer/index.html"));
+    win.loadURL("https://buildtray.com");
   } else {
-    const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
-    win.loadURL(`${url}#/dashboard`);
+    win.loadURL("http://localhost:3000/dashboard");
   }
 }
 
