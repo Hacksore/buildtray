@@ -6,7 +6,7 @@ import { app } from ".";
 
 const APP_BASE_PATH = app.isPackaged
   ? path.resolve(`${__dirname}/../renderer`)
-  : path.resolve(`${__dirname}/../../packages/renderer/public`);
+  : path.resolve(`${__dirname}/../../resources`);
 
 const trayIconTheme = nativeTheme.shouldUseDarkColors ? "light" : "dark";
 const trayIconPath = `${APP_BASE_PATH}/image/icon-${trayIconTheme}.png`;

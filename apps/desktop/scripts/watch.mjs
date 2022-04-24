@@ -30,7 +30,7 @@ function watchMain(server) {
   }
 
   return build({
-    configFile: 'packages/main/vite.config.ts',
+    configFile: 'src/main/vite.config.ts',
     mode: 'development',
     plugins: [!debug && startElectron].filter(Boolean),
     build: {
@@ -44,7 +44,7 @@ function watchMain(server) {
  */
 function watchPreload(server) {
   return build({
-    configFile: 'packages/preload/vite.config.ts',
+    configFile: 'src/preload/vite.config.ts',
     mode: 'development',
     plugins: [{
       name: 'electron-preload-watcher',
@@ -59,7 +59,7 @@ function watchPreload(server) {
 }
 
 // bootstrap
-const server = await createServer({ configFile: 'packages/renderer/vite.config.ts' })
+const server = await createServer({ configFile: 'vite.config.ts' })
 
 await server.listen()
 await watchPreload(server)
