@@ -4,6 +4,27 @@ import { db } from "../firebase";
 const router = express.Router();
 
 /**
+ * Unsubscribes the user to a repo
+ */
+ router.delete("/repo/subscribe", async (req: any, res) => {
+  const body = req.body;
+  console.log(body);
+  const id = req.id;
+  const { entity, repo } = body;
+  const path = `users/${id}/repos/${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
+
+  const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
+  console.log(`Checking repos/${entity}/${repo} for a valid app insatll`);
+  if (!doc.exists()) {
+    return res.status(500).send({ error: `${entity}/${repo} does not have the app installed` });
+  }
+
+  db.ref(path).set(null);
+
+  res.send({ message: `Unsubbed from ${path}` });
+});
+
+/**
  * Subscribes the user to a repo
  */
 router.post("/repo/subscribe", async (req: any, res) => {

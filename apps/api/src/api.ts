@@ -17,9 +17,16 @@ export const addBuildEntry = item => {
   const id = item.workflow_run.id;
   db.ref(`repos/${fullName}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
-    status: item.action,
+    state: item.action,
+    status: item.workflow_run.conclusion,
     id: item.workflow_run.id,
     branch: item.workflow_run.head_branch,
+    commit: item.workflow_run.head_sha,
+    url: item.workflow_run.html_url,
+    user: {
+      login: item.triggering_actor.login,
+      avatarUrl: item.triggering_actor.avatar_url,
+    }
   });
 };
 

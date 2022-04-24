@@ -12,6 +12,20 @@ export const getSubscribedRepos = () => {
   }
 };
 
+export const unsubscribeToRepo = (data: any) => {
+  try {
+    return _request("/repo/subscribe", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    return Promise.reject("Error");
+  }
+};
+
 export const subscribeToRepo = (data: any) => {
   try {
     return _request("/repo/subscribe", {

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "react-query";
 import { auth, queryClient } from "../main";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllUserRepos, getSubscribedRepos } from "../api/user";
+import { getAllUserRepos, getSubscribedRepos, unsubscribeToRepo } from "../api/user";
 import { useAppSelector } from "../hooks/redux";
 import firebaseService from "../service/firebase";
 import { Button, Grid, Tooltip } from "@mui/material";
@@ -16,8 +16,10 @@ export default function Dashboard() {
   const [user, loading, error]: any = useAuthState(auth);
   const [activeBuilds, setActiveBuilds] = useState<any>([]);
   const [recentBuilds, setRecentBuilds] = useState<any>([]);
+  const [sortedRepos, setSortedRepos] = useState<any>([]);
   const authToken = useAppSelector(state => state.auth.authToken);
-  const subscribeRepo: any = useMutation(data => subscribeToRepo(data));
+  const subscribedRepo: any = useMutation(data => subscribeToRepo(data));
+  const unsubscribeRepo: any = useMutation(data => unsubscribeToRepo(data));
 
   const navigate = useNavigate();
 
@@ -84,6 +86,25 @@ export default function Dashboard() {
     }
   }, [subscribedRepos]);
 
+  useEffect(() => {
+    console.log("s", subscribedRepo)
+    if(!allUserRepos || !subscribedRepos) {
+      return;
+    }
+
+    // sort if subscribed repos changes
+    const data =  [...allUserRepos];
+    const sorted = data.sort((a: any, b: any) => {
+      const found = subscribedRepos.find((sub: any) => sub.fullName === a.fullName);
+      if (found) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+    setSortedRepos(sorted);
+  }, [subscribedRepos, allUserRepos]);
+
   if (loading || !user) {
     return <h2>loading....</h2>;
   }
@@ -111,44 +132,19 @@ export default function Dashboard() {
         <pre key={`${build.id}-${build.createdAt}`}>{JSON.stringify(build, null, 2)}</pre>
       ))}
       <Grid container>
-        {allUserRepos.map((repo: any) => (
-          <Grid item key={repo.fullName}>
-            <Box
-              sx={{
-                backgroundColor: theme => darken(theme.palette.background.default, 0.3),
-                width: 300,
-                height: 100,
-                margin: 1,
-                padding: 1,
-                display: "flex",
-                fontWeight: "bold",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              <Tooltip title={repo.fullName}>
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    width: 250,
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                  }}
-                >
-                  {repo.fullName}
-                </Box>
-              </Tooltip>
-
+        {sortedRepos.map((repo: any) => {
+          const isSubscribed = subscribedRepos.find((sub: any) => sub.fullName === repo.fullName);
+          return (
+            <Grid item key={repo.fullName}>
               <Button
                 onClick={() => {
                   const [entity, name] = repo.fullName.split("/");
-                  subscribeRepo.mutate(
+                  const mutation = isSubscribed ? unsubscribeRepo : subscribedRepo;
+                  mutation.mutate(
                     {
                       entity,
                       repo: name,
-                    },
+                    },                
                     {
                       onSuccess: () => {
                         queryClient.invalidateQueries("subscribedRepos");
@@ -156,12 +152,36 @@ export default function Dashboard() {
                     }
                   );
                 }}
+                sx={{
+                  backgroundColor: theme => (isSubscribed ? "green" : darken(theme.palette.background.default, 0.3)),
+                  width: 300,
+                  height: 100,
+                  margin: 1,
+                  padding: 1,
+                  display: "flex",
+                  fontWeight: "bold",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
               >
-                Subscribe
+                <Tooltip title={repo.fullName}>
+                  <Box
+                    sx={{
+                      textAlign: "center",
+                      width: 250,
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {repo.fullName}
+                  </Box>
+                </Tooltip>
               </Button>
-            </Box>
-          </Grid>
-        ))}
+            </Grid>
+          );
+        })}
       </Grid>
     </>
   );
