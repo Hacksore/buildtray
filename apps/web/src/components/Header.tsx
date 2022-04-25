@@ -23,11 +23,7 @@ export default function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Buildtray
           </Typography>
-          {user && (
-            <Button onClick={() => signOut(auth)}>
-              Logout
-            </Button>
-          )}
+          {user && <Button onClick={() => signOut(auth)}>Logout</Button>}
         </Toolbar>
       </AppBar>
     </Box>

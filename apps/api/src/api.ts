@@ -1,15 +1,7 @@
 import { db } from "./firebase.js";
 import got from "got";
 import IBuildInfo from "shared/types/IBuildInfo";
-
-const encodeRepo = (fullName: string) => {
-  const safeName = (name: string) => {
-    return encodeURIComponent(name.toLocaleLowerCase()).replaceAll(".", "%2f");
-  };
-
-  const [owner, repo] = fullName.split("/");
-  return `${safeName(owner)}/${safeName(repo)}`;
-};
+import { encodeRepo } from "shared/utils/naming";
 
 export const createRepoEntry = items => {
   items.forEach(item => {
@@ -23,7 +15,7 @@ export const createRepoEntry = items => {
 export const addBuildEntry = item => {
   const fullName = item.repository.full_name;
   const id = item.workflow_run.id;
-  db.ref(`repos/${encodeRepo(fullName)}}/builds/${id}`).set({
+  db.ref(`repos/${encodeRepo(fullName)}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
     state: item.action,
     status: item.workflow_run.conclusion,

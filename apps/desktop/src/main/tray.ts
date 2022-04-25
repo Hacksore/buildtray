@@ -42,7 +42,7 @@ async function createTrayWindow() {
 
   if (app.isPackaged) {
     trayWin.loadURL("https://buildtray.com");
-  } else {    
+  } else {
     trayWin.loadURL("http://localhost:3000/tray");
   }
 }
@@ -57,15 +57,13 @@ app.whenReady().then(() => {
   // tray.setContextMenu(contextMenu);
 
   tray.addListener("click", () => {
-
     // show it
     trayWin?.show();
 
     // move it to the menubar position
     const { x, y } = tray.getBounds();
     // const { width, height } = trayWin?.getBounds();
-    trayWin?.setPosition(x - 300/2, 20);
-    
+    trayWin?.setPosition(x - 300 / 2, 20);
   });
 
   trayWin?.addListener("blur", () => trayWin?.hide());

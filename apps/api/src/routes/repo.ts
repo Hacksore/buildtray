@@ -6,7 +6,7 @@ const router = express.Router();
 /**
  * Unsubscribes the user to a repo
  */
- router.delete("/repo/subscribe", async (req: any, res) => {
+router.delete("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
   console.log(body);
   const id = req.id;
@@ -73,7 +73,7 @@ router.get("/repos/subscribed", async (req: any, res) => {
   return res.json(repos);
 });
 
-/** 
+/**
  * all the public repos that user can see or has access to
  */
 router.get("/repos/all", async (req: any, res) => {

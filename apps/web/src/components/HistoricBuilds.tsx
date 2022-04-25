@@ -19,7 +19,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     background: "#161B22",
     "&:hover": {
       background: lighten("#1B1F23", 0.2),
-    }
+    },
   },
   "& .title": {
     display: "flex",
@@ -57,7 +57,9 @@ const ListItem = ({ fullName, status, actor, commit }: IBuildInfo) => {
         <Typography>{fullName}</Typography>
       </Box>
       <Box className="desc">
-        <Typography>{actor} - {commit.message}</Typography>
+        <Typography>
+          {actor} - {commit.message}
+        </Typography>
       </Box>
     </Box>
   );

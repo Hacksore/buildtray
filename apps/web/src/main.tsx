@@ -43,9 +43,9 @@ ReactDOM.render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <App />
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
           </ThemeProvider>
         </BrowserRouter>
       </QueryClientProvider>

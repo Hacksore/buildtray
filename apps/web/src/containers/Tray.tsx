@@ -30,7 +30,7 @@ const RepoList = () => {
       )}
     </>
   );
-}
+};
 
 export const Tray = () => {
   const [user, loading, error]: any = useAuthState(auth);
@@ -97,13 +97,12 @@ export const Tray = () => {
     return (
       <div>
         <Typography>You don`&apos;t have any subbed repos please sub to some</Typography>
-        <RepoList />      
+        <RepoList />
       </div>
     );
   }
 
   return (
-
     <Box>
       <Typography>Active</Typography>
       <ActiveBuilds builds={activeBuilds} />

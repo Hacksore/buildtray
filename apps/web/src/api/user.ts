@@ -2,7 +2,7 @@ import { store } from "../store";
 
 /**
  * All the user repos that have been subbed
- * @returns 
+ * @returns
  */
 export const getSubscribedRepos = () => {
   try {
@@ -42,7 +42,7 @@ export const subscribeToRepo = (data: any) => {
 
 /**
  * All repos the users can see
- * @returns 
+ * @returns
  */
 export const getAllUserRepos = () => {
   try {
@@ -76,7 +76,7 @@ export const _request = async (path: string, options = {} as any) => {
       "X-Github-Auth": state.auth.githubAccessToken,
     },
   };
-  
+
   try {
     const repsonse = fetch("/api/v1" + path, mergedOptions).then(res => res.json());
     return repsonse;

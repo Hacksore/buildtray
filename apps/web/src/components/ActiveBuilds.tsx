@@ -17,7 +17,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     background: "#161B22",
     "&:hover": {
       background: lighten("#1B1F23", 0.2),
-    }
+    },
   },
   "& .status-icon": {
     width: 16,

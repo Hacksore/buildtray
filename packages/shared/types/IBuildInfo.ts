@@ -3,7 +3,7 @@ interface IBuildInfo {
     sha: string;
     message: string;
     author: string;
-  }
+  };
   id: string;
   state: string;
   status: "queued" | "failure" | "completed";
@@ -16,7 +16,7 @@ interface IBuildInfo {
   user: {
     sender: string;
     avatarUrl: string;
-  }
+  };
 }
 
 export default IBuildInfo;

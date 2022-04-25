@@ -6,9 +6,10 @@
     "target": "ES2021",
     "outDir": "dist",
     "sourceMap": true,
+    "rootDir": "../../",
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["../../packages/shared/**/*.ts", "src"]
 }
