@@ -26,7 +26,7 @@ async function createWindow() {
   });
 
   if (app.isPackaged) {
-    win.loadURL("https://buildtray.com");
+    win.loadURL("https://buildtray.com/dashboard");
   } else {
     win.loadURL("http://localhost:3000/dashboard");
   }

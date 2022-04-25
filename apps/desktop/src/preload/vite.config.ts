@@ -6,7 +6,7 @@ import pkg from "../../package.json";
 export default defineConfig({
   root: __dirname,
   build: {
-    outDir: "../../dist/preload",
+    outDir: "../../build/preload",
     emptyOutDir: true,
     minify: process.env./* from mode option */ NODE_ENV === "production",
     // https://github.com/caoxiemeihao/electron-vue-vite/issues/61

@@ -1,27 +1,27 @@
-import { builtinModules } from 'module'
-import { defineConfig } from 'vite'
-import pkg from '../../package.json'
+import { builtinModules } from "module";
+import { defineConfig } from "vite";
+import pkg from "../../package.json";
 
 export default defineConfig({
   root: __dirname,
   plugins: [],
   build: {
-    outDir: '../../dist/main',
+    outDir: "../../build/main",
     emptyOutDir: true,
-    minify: process.env./* from mode option */NODE_ENV === 'production',
+    minify: process.env./* from mode option */ NODE_ENV === "production",
     sourcemap: true,
     lib: {
-      entry: 'index.ts',
-      formats: ['cjs'],
-      fileName: () => '[name].cjs',
+      entry: "index.ts",
+      formats: ["cjs"],
+      fileName: () => "[name].cjs",
     },
     rollupOptions: {
       external: [
-        'electron',
+        "electron",
         ...builtinModules,
         // @ts-ignore
         ...Object.keys(pkg.dependencies || {}),
       ],
     },
   },
-})
+});

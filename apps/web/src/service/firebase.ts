@@ -24,7 +24,7 @@ class FirebaseService extends EventEmitter {
    * and push an data on the emit for repoSnapshot
    * @param {string} path
    */
-  subscribeRepo(path: string) {
+  subscribeToRepo(path: string) {
     const buildPath = `repos/${path}/builds`;
     const localRef = ref(database, buildPath);
     console.log("subscribing to changes for", buildPath);

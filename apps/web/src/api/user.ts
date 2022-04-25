@@ -12,7 +12,7 @@ export const getSubscribedRepos = () => {
   }
 };
 
-export const unsubscribeToRepo = (data: any) => {
+export const unsubscribeFromRepo = (data: any) => {
   try {
     return _request("/repo/subscribe", {
       method: "DELETE",

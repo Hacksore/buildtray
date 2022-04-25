@@ -1,5 +1,4 @@
 # buildtray
 
-WIP
+An app to allow you to subscribe to Github build notifications for your projects
 
-TODO: https://vercel.com/docs/concepts/git/monorepos#

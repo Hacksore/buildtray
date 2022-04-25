@@ -32,7 +32,7 @@ export default defineConfig({
   ],
   base: "./",
   build: {
-    outDir: "../../dist/renderer",
+    outDir: "../../build/renderer",
     emptyOutDir: true,
     sourcemap: true,
   },

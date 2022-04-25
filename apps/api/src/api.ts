@@ -1,11 +1,19 @@
 import { db } from "./firebase.js";
 import got from "got";
+import IBuildInfo from "shared/types/IBuildInfo";
+
+const encodeRepo = (fullName: string) => {
+  const safeName = (name: string) => {
+    return encodeURIComponent(name.toLocaleLowerCase()).replaceAll(".", "%2f");
+  };
+
+  const [owner, repo] = fullName.split("/");
+  return `${safeName(owner)}/${safeName(repo)}`;
+};
 
 export const createRepoEntry = items => {
   items.forEach(item => {
-    const fullName = item.full_name.replaceAll(".", "-").toLowerCase();
-    const [entity, repo] = fullName.split("/");
-    db.ref(`repos/${entity}/${repo}`).set({
+    db.ref(`repos/${encodeRepo(item.full_name)}`).set({
       installed: true,
       private: true,
     });
@@ -13,28 +21,35 @@ export const createRepoEntry = items => {
 };
 
 export const addBuildEntry = item => {
-  const fullName = item.repository.full_name.replaceAll(".", "-").toLowerCase();
+  const fullName = item.repository.full_name;
   const id = item.workflow_run.id;
-  db.ref(`repos/${fullName}/builds/${id}`).set({
+  db.ref(`repos/${encodeRepo(fullName)}}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
     state: item.action,
     status: item.workflow_run.conclusion,
-    id: item.workflow_run.id,
+    id,
     branch: item.workflow_run.head_branch,
-    commit: item.workflow_run.head_sha,
+    commit: {
+      sha: item.workflow_run.head_sha,
+      message: item.workflow_run.head_commit.message,
+      author: item.workflow_run.head_commit.author.name,
+    },
+    fullName,
+    org: item.repository.owner.login,
+    repo: item.repository.name,
     url: item.workflow_run.html_url,
     user: {
-      login: item.triggering_actor.login,
-      avatarUrl: item.triggering_actor.avatar_url,
-    }
-  });
+      // TODO: this needs much work
+      sender: item.sender.login,
+      avatarUrl: item?.sender?.avatar_url,
+    },
+  } as IBuildInfo);
 };
 
 export const removeRepoEntry = items => {
   items.forEach(item => {
-    const fullName = item.full_name.replaceAll(".", "-").toLowerCase();
-    const [entity, repo] = fullName.split("/");
-    db.ref(`repos/${entity}/${repo}`).set(null);
+    const fullName = item.full_name;
+    db.ref(`repos/${encodeRepo(fullName)}`).set(null);
   });
 };
 

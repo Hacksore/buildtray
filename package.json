@@ -13,6 +13,7 @@
     "deploy:web": "vercel deploy",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
+    "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
   },
   "devDependencies": {

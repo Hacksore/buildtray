@@ -48,6 +48,7 @@ async function createTrayWindow() {
 }
 
 app.whenReady().then(() => {
+  console.log("Creating tray window");
   // create the window when app laods
   createTrayWindow();
   const tray = new Tray(trayIconPath);
@@ -60,13 +61,12 @@ app.whenReady().then(() => {
     // show it
     trayWin?.show();
 
-    // focus it
-    trayWin?.focus();
-
     // move it to the menubar position
     const { x, y } = tray.getBounds();
     // const { width, height } = trayWin?.getBounds();
     trayWin?.setPosition(x - 300/2, 20);
     
   });
+
+  trayWin?.addListener("blur", () => trayWin?.hide());
 });

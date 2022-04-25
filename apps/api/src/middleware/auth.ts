@@ -12,7 +12,7 @@ export const authenticate = async (req: Request, res, next) => {
 
   const secureHeader = req.headers["x-hub-signature-256"];
 
-  if (secureHeader) {
+  if (secureHeader) {    
     const sha256Hasher = crypto.createHmac("sha256", secret);
     const secretSha = "sha256=" + sha256Hasher.update(JSON.stringify(req.body)).digest("hex");
 
