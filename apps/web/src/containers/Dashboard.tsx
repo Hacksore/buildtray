@@ -69,21 +69,21 @@ export default function Dashboard() {
   }, []);
 
   // create subs for repo builds
-  useEffect(() => {
-    // fetch most recent builds
-    const fetchLatestBuilds = async (path: string) => {
-      const builds: any = await firebaseService.getMostRecentBuilds(path);
-      setRecentBuilds((existing: any) => [...existing, ...builds]);
-    };
+  // useEffect(() => {
+  //   // fetch most recent builds
+  //   const fetchLatestBuilds = async (path: string) => {
+  //     const builds: any = await firebaseService.getMostRecentBuilds(path);
+  //     setRecentBuilds((existing: any) => [...existing, ...builds]);
+  //   };
 
-    for (const repo of subscribedRepos) {
-      // subscribe for new changes
-      firebaseService.subscribeToRepo(repo.fullName);
+  //   for (const repo of subscribedRepos) {
+  //     // subscribe for new changes
+  //     firebaseService.subscribeToRepo(repo.fullName);
 
-      // get latest builds
-      fetchLatestBuilds(repo.fullName);
-    }
-  }, [subscribedRepos]);
+  //     // get latest builds
+  //     fetchLatestBuilds(repo.fullName);
+  //   }
+  // }, [subscribedRepos]);
 
   useEffect(() => {
     if (!allUserRepos || !subscribedRepos) {

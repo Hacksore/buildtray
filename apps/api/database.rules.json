@@ -5,7 +5,7 @@
       "$entity": {
         "$repo": {
           "builds": {
-            ".indexOn": ["createdAt"]
+            ".indexOn": ["createdAt", "id"]
           }
         }
       }

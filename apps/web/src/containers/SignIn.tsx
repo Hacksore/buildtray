@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { useLocation, useNavigate } from "react-router-dom";
 import { initialSignin } from "../api/user";
 import { useAppDispatch } from "../hooks/redux";
 import { auth } from "../main";
@@ -9,6 +10,7 @@ const { setGithubAccessToken } = appSlice.actions;
 
 export default function SignIn() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
@@ -19,6 +21,9 @@ export default function SignIn() {
       dispatch(setGithubAccessToken(credential.accessToken));
       // post to the api with our gittoken
       initialSignin(credential.accessToken);
+
+      // redirect to the dashboard
+      navigate("/dashboard");
     }
   };
 

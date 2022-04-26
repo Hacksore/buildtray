@@ -1,5 +1,5 @@
 import { ComponentMeta } from "@storybook/react";
-import { HistoricBuilds } from "../components/HistoricBuilds";
+import { HistoricBuilds } from "../components/BuildsList";
 
 export default {
   title: "Components/HistoricBuilds",

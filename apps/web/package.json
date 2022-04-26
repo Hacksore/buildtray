@@ -41,7 +41,13 @@
     "babel-loader": "^8.2.5",
     "clsx": "^1.1.1",
     "html-webpack-plugin": "^5.5.0",
+    "msw": "^0.39.2",
+    "msw-storybook-addon": "^1.6.3",
+    "storybook-addon-mock": "^2.3.1",
     "typescript": "^4.5.4",
     "vite": "^2.8.6"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

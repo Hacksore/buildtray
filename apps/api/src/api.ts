@@ -17,9 +17,7 @@ export const addBuildEntry = item => {
   const id = item.workflow_run.id;
   db.ref(`repos/${encodeRepo(fullName)}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
-    state: item.action,
-    status: item.workflow_run.conclusion,
-    id,
+    status: item.workflow_run.status,
     branch: item.workflow_run.head_branch,
     commit: {
       sha: item.workflow_run.head_sha,

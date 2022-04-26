@@ -8,10 +8,8 @@
   ],
   "scripts": {
     "start": "turbo run start --parallel",
+    "dev": "turbo run start --parallel --scope='api' --scope='web'",
     "build": "turbo run build",
-    "deploy": "vercel deploy && npm run deploy -w api",
-    "deploy:web": "vercel deploy",
-    "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
