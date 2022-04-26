@@ -20,6 +20,7 @@ let win: BrowserWindow | null = null;
 async function createWindow() {
   win = new BrowserWindow({
     title: "Main window",
+    show: false,
     webPreferences: {
       preload: join(__dirname, "../preload/index.cjs"),
     },
@@ -32,7 +33,7 @@ async function createWindow() {
   }
 }
 
-// app.whenReady().then(createWindow);
+app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
   win = null;

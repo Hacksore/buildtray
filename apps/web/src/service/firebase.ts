@@ -71,7 +71,7 @@ class FirebaseService extends EventEmitter {
     return new Promise((resolve, reject) => {
       const buildPath = `repos/${encodeRepo(fullName)}/builds`;
       const localRef = ref(database, buildPath);
-      const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(10));
+      const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(5));
 
       onValue(updatedRepo, (snapshot: DataSnapshot) => {
         const val = snapshot.val();

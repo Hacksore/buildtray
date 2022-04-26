@@ -1,5 +1,4 @@
-import { Tray, Menu, nativeTheme, BrowserWindow } from "electron";
-import pkg from "../../../../package.json";
+import { Tray, nativeTheme, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 
 import { app } from ".";
@@ -13,24 +12,10 @@ const trayIconPath = `${APP_BASE_PATH}/image/icon-${trayIconTheme}.png`;
 
 let trayWin: BrowserWindow | null = null;
 
-const contextMenu = Menu.buildFromTemplate([
-  {
-    label: `Buildtray ${pkg.version}`,
-    enabled: false,
-  },
-  {
-    type: "separator",
-  },
-  {
-    label: `This is in progress...`,
-    enabled: false,
-  },
-]);
-
 // TODO: createTrayWindow and createTree could use a refactor to combime them to a util function
 async function createTrayWindow() {
   trayWin = new BrowserWindow({
-    title: "Main window",
+    title: "Tray",
     frame: false,
     show: false,
     width: 300,
@@ -48,23 +33,36 @@ async function createTrayWindow() {
 }
 
 app.whenReady().then(() => {
-  console.log("Creating tray window");
   // create the window when app laods
   createTrayWindow();
   const tray = new Tray(trayIconPath);
 
   tray.setToolTip("Buildtray");
-  // tray.setContextMenu(contextMenu);
-
   tray.addListener("click", () => {
+
     // show it
     trayWin?.show();
 
     // move it to the menubar position
     const { x, y } = tray.getBounds();
-    // const { width, height } = trayWin?.getBounds();
-    trayWin?.setPosition(x - 300 / 2, 20);
+    const bounds = trayWin?.getBounds();
+    
+    if (bounds) { 
+      trayWin?.setPosition(x, y - bounds.height);
+    }
   });
 
   trayWin?.addListener("blur", () => trayWin?.hide());
+
+  // hide app icon in dock for macos
+  app.dock.hide();
+
+  // listen for events to change the icon color/status
+  ipcMain.on("toMain", async (_, message) => {
+    const { status } = JSON.parse(message);
+    // change icon color based on status payload
+    const path = `${APP_BASE_PATH}/image/icon-${status}.png`;
+    tray.setImage(path);
+  }); 
+
 });

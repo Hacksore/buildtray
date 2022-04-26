@@ -106,6 +106,11 @@ export const BuildsList = () => {
       } else if (build.status === "completed" || build.state === "failed") {
         dispatch(updateBuild(build));
       }
+
+      // inform electron of latest build status
+      window.electron.send("toMain", {
+        status: build.status,
+      });
     });
 
     return l;
