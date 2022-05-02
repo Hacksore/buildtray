@@ -1,15 +1,10 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { GithubAuthProvider, signInWithPopup } from "firebase/auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { initialSignin } from "../api/user";
-import { useAppDispatch } from "../hooks/redux";
 import { auth } from "../main";
 
-import { appSlice } from "../reducers/authReducer";
-const { setGithubAccessToken } = appSlice.actions;
-
 export default function SignIn() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const signInWithGithub = async () => {
@@ -18,8 +13,9 @@ export default function SignIn() {
     const credential = GithubAuthProvider.credentialFromResult(result);
     // if we have a token put it in the ducks
     if (credential && credential.accessToken) {
-      dispatch(setGithubAccessToken(credential.accessToken));
-      // post to the api with our gittoken
+
+      // login to the api so we create a session
+      // TODO: move both github and firebase token to server?
       initialSignin(credential.accessToken);
 
       // redirect to the dashboard
@@ -41,7 +37,7 @@ export default function SignIn() {
           <Button className="sign-in" onClick={signInWithGithub}>
             Sign in with Github
           </Button>
-          <p>Login to view all the repos you have the app installed on</p>
+          <Typography>Login to view all the repos you have the app installed on</Typography>
         </Grid>
       </Grid>
     </Box>

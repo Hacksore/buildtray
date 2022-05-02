@@ -1,5 +1,3 @@
-import { store } from "../store";
-
 /**
  * All the user repos that have been subbed
  * @returns
@@ -59,21 +57,19 @@ export const getAllUserRepos = () => {
 export const initialSignin = (token: string) => {
   _request("/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+
     body: JSON.stringify({ token }),
   });
 };
 
-export const _request = async (path: string, options = {} as unknown) => {
-  const state = store.getState();
+export const _request = async (path: string, options: RequestInit = {} ) => {
   const mergedOptions = {
     ...options,
     headers: {
-      ...(options?.headers || {}),
-      Authorization: `Bearer ${state.auth.authToken}`,
-      "X-Github-Auth": state.auth.githubAccessToken,
+      ...{
+        "Content-Type": "application/json",
+      },
+      ...options.headers || {},
     },
   };
 

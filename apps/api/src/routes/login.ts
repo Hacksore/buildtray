@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../firebase";
 import { getUsersRepos } from "../api";
+import { userProfile } from "../util/github";
 
 const router = express.Router();
 
@@ -9,7 +10,17 @@ const router = express.Router();
  */
 router.post("/login", async (req: any, res) => {
   const { token } = req.body;
-  const id = req.id;
+
+  // add gh-token to session
+  // TODO: error handle
+  req.session.githubToken = token;
+  req.session.githubUser = await userProfile(token);
+
+  req.session.save();
+
+  console.log(req.session.githubUser);
+
+  const id = req.session.githubUser.id;
   const path = `users/${id}`;
 
   const doc = await db.ref(path).once("value");

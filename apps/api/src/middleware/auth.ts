@@ -1,6 +1,5 @@
 import { Request } from "express";
 import crypto from "crypto";
-
 import { config } from "../firebase.js";
 import admin from "firebase-admin";
 
@@ -22,17 +21,17 @@ export const authenticate = async (req: Request, res, next) => {
     }
   }
 
-  if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) {
+  const idToken = req.session.githubToken;
+  if (!idToken) {
     res.status(401).send("Unauthorized");
     return;
   }
 
-  const idToken = req.headers.authorization.split("Bearer ")[1];
   try {
     const decodedIdToken = await auth.verifyIdToken(idToken);
 
-    req.user = decodedIdToken;
-    req.id = decodedIdToken.firebase.identities["github.com"][0];
+    req.session.user = decodedIdToken;
+    req.session.id = decodedIdToken.firebase.identities["github.com"][0];
 
     return next();
   } catch (e) {
@@ -40,4 +39,5 @@ export const authenticate = async (req: Request, res, next) => {
     res.status(401).send("Unauthorized");
     return;
   }
+
 };

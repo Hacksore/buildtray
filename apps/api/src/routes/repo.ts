@@ -77,7 +77,7 @@ router.get("/repos/subscribed", async (req: any, res) => {
  * all the public repos that user can see or has access to
  */
 router.get("/repos/all", async (req: any, res) => {
-  const path = `users/${req.id}`;
+  const path = `users/${req.session.githubUser.id}`;
   const doc = await db.ref(path).once("value");
   const items = doc.val();
 
