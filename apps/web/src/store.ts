@@ -8,7 +8,6 @@ const isProd = process.env.NODE_ENV === "production";
 
 const FILTERD_EVENTS: Array<string> = [];
 const logger = createLogger({
-  // @ts-ignore
   predicate: (_, action) => !isProd && !FILTERD_EVENTS.includes(action.type),
 });
 

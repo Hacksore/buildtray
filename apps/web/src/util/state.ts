@@ -1,4 +1,4 @@
-export const saveState = (state: any) => {
+export const saveState = (state: unknown) => {
   try {
     const serialState = JSON.stringify(state);
     localStorage.setItem("appState", serialState);
@@ -7,7 +7,7 @@ export const saveState = (state: any) => {
   }
 };
 
-export const loadState = (initialState: any) => {
+export const loadState = (initialState: unknown) => {
   try {
     const serialState = localStorage.getItem("appState");
     if (serialState === null) {

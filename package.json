@@ -9,7 +9,9 @@
   "scripts": {
     "start": "turbo run start --parallel",
     "dev": "turbo run start --parallel --scope='api' --scope='web'",
+    "storybook": "turbo run storybook --no-deps --scope='web'",
     "build": "turbo run build",
+    "deploy": "turbo run deploy --parallel",
     "lint": "turbo run lint",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""

@@ -12,7 +12,7 @@ export const getSubscribedRepos = () => {
   }
 };
 
-export const unsubscribeFromRepo = (data: any) => {
+export const unsubscribeFromRepo = (data: unknown) => {
   try {
     return _request("/repo/subscribe", {
       method: "DELETE",
@@ -26,7 +26,7 @@ export const unsubscribeFromRepo = (data: any) => {
   }
 };
 
-export const subscribeToRepo = (data: any) => {
+export const subscribeToRepo = (data: unknown) => {
   try {
     return _request("/repo/subscribe", {
       method: "POST",
@@ -66,7 +66,7 @@ export const initialSignin = (token: string) => {
   });
 };
 
-export const _request = async (path: string, options = {} as any) => {
+export const _request = async (path: string, options = {} as unknown) => {
   const state = store.getState();
   const mergedOptions = {
     ...options,

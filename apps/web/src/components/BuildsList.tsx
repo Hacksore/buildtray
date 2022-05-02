@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import IBuildInfo from "shared/types/IBuildInfo";
 import { getSubscribedRepos } from "../api/user";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import firebaseService from "../service/firebase";
+import firebaseService from "service/firebase";
 import { buildSlice } from "../reducers/buildReducer";
 
 const { addBuild, updateBuild } = buildSlice.actions;
@@ -87,23 +87,21 @@ export const BuildsList = () => {
     // get all repos I have subbed to
     subscribedRepos.forEach(async (repo: IBuildInfo) => {
       // get recent builds
-      // @ts-ignore
-      const recentBuilds: IBuildInfo = await firebaseService.getMostRecentBuilds(repo.fullName);
-      // @ts-ignore
+      const recentBuilds: IBuildInfo[] = await firebaseService.getMostRecentBuilds(repo.fullName);
       for (const build of recentBuilds) {
         dispatch(addBuild(build));
       }
 
       // sub for builds events
-      firebaseService.subscribeToRepo(repo.fullName)
+      firebaseService.subscribeToRepo(repo.fullName);
     });
 
     // listen for events
-    const l = firebaseService.on("build", (build) => {
+    firebaseService.on("build", (build: IBuildInfo) => {
       // getting builds now let's send to redux
       if (build.status === "queued") {
         dispatch(addBuild(build));
-      } else if (build.status === "completed" || build.state === "failed") {
+      } else if (build.status === "completed" || build.status === "failure") {
         dispatch(updateBuild(build));
       }
 
@@ -113,7 +111,7 @@ export const BuildsList = () => {
       });
     });
 
-    return l;
+    return () => firebaseService.clearAllListeners();
 
   }, [subscribedRepos]);
 

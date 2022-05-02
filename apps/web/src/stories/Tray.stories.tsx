@@ -4,13 +4,14 @@ import { Provider } from "react-redux";
 import { Tray } from "../containers/Tray";
 import { store } from "../store";
 import withMock from "storybook-addon-mock";
+import { rest } from "msw";
 
 export default {
   title: "Components/Tray",
   decorators: [withMock],
 } as ComponentMeta<typeof Tray>;
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -18,7 +19,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-const Template = () => {
+export const Template = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -28,16 +29,38 @@ const Template = () => {
   );
 };
 
-export const Default = Template.bind({});
-// Default.parameters = {
-//   mockData: [
-//     {
-//       url: "http:///todos/1",
-//       method: "GET",
-//       status: 200,
-//       response: {
-//         data: "Hello storybook-addon-mock!",
-//       },
-//     },
-//   ],
-// };
+Template.parameters = {
+  msw: {
+    handlers: [
+      rest.get("/api/v1/repos/subscribed", (req, res, ctx) => {
+        return res(ctx.json(["hacksore/test"]));
+      }),
+  
+      rest.get("/api/v1/repos/ge", (req, res, ctx) => {
+        return res(
+          ctx.json([
+            {
+              commit: {
+                sha: "test",
+                message: "test",
+                author: "test",
+              },
+              id: "test",
+              status: "queued",
+              branch: "test",
+              createdAt: 1300000,
+              fullName: "test",
+              org: "test",
+              repo: "test",
+              url: "test",
+              user: {
+                sender: "test",
+                avatarUrl: "test",
+              },
+            },
+          ])
+        );
+      }),
+    ],
+  },
+};

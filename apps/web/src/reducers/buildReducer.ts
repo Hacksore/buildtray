@@ -17,10 +17,8 @@ export const buildSlice = createSlice({
       state.push(action.payload);
     },
     updateBuild(state, action: PayloadAction<IBuildInfo>) {
-      // @ts-ignore
       const index = state.findIndex((b: IBuildInfo) => b.id === action.payload.id);
       if (index !== -1) {
-        //@ts-ignore
         state[index] = action.payload;
       }
     }

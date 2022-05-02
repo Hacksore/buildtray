@@ -1,4 +1,12 @@
-import { rest } from 'msw'
+import { initialize, mswDecorator } from 'msw-storybook-addon';
+
+initialize({
+  onUnhandledRequest: 'bypass'
+})
+
+import { firebaseDecorator } from '../__mocks__/firebase';
+
+export const decorators = [mswDecorator, firebaseDecorator];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -8,17 +16,6 @@ export const parameters = {
       date: /Date$/,
     },
   },
-  msw: {
-    handlers: [
-      rest.get('/api/v1/repos/subscribed', (req, res, ctx) => {
-        console.log("mock")
-        return res(
-          ctx.json([])
-        )
-      }),
-    ],
-
-  }
 };
 
 //preview.js

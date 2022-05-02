@@ -4,13 +4,10 @@ import {
   onChildChanged,
   DataSnapshot,
   onChildAdded,
-  equalTo,
   query,
   limitToLast,
   orderByChild,
-  startAt,
   startAfter,
-  serverTimestamp,
 } from "firebase/database";
 import { EventEmitter } from "events";
 import { database } from "../main";
@@ -18,12 +15,13 @@ import { database } from "../main";
 import { encodeRepo } from "shared/utils/naming";
 import IBuildInfo from "shared/types/IBuildInfo";
 declare interface FirebaseService {
-  on(event: "build", listener: (data: any) => void): this;
+  on(event: "build", listener: (data: IBuildInfo) => void): this;
 }
 
 class FirebaseService extends EventEmitter {
+  [x: string]: any;
 
-  public _l: any[] = [];
+  public _l: unknown[] = [];
 
   /**
    * Subscribe to something like repos/<entity>/<repo>
@@ -33,7 +31,6 @@ class FirebaseService extends EventEmitter {
   subscribeToRepo(fullName: string) {
     const buildPath = `repos/${encodeRepo(fullName)}/builds`;
     const localRef = ref(database, buildPath);
-    console.log("subscribing to changes for", encodeRepo(fullName));
 
     const time = Math.floor(+new Date() / 1000);
     const updatedRepo = query(localRef, orderByChild("createdAt"), startAfter(time), limitToLast(1));
@@ -68,7 +65,7 @@ class FirebaseService extends EventEmitter {
    * @returns Promise<any[]>
    */
   getMostRecentBuilds(fullName: string): Promise<IBuildInfo[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const buildPath = `repos/${encodeRepo(fullName)}/builds`;
       const localRef = ref(database, buildPath);
       const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(5));
@@ -80,15 +77,21 @@ class FirebaseService extends EventEmitter {
           return resolve([]);
         }
 
-        const fixed = Object.entries(val).map(([k, v]: [string, any]) => ({
+        const fixed = Object.entries(val).map(([k, v]: [string, unknown]) => ({
           id: k,
           fullName,
-          ...v,
+          ...(v as Record<string, unknown>),
         }));
 
-        resolve(fixed.reverse());
+        resolve(fixed.reverse() as IBuildInfo[]);
       });
     });
+  }
+
+  clearAllListeners(): void {
+    for (const l of this._l) { 
+      console.log("remove listener", l);
+    }
   }
 }
 
