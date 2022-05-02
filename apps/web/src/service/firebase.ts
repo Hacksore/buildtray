@@ -19,8 +19,6 @@ declare interface FirebaseService {
 }
 
 class FirebaseService extends EventEmitter {
-  [x: string]: any;
-
   public _l: unknown[] = [];
 
   /**

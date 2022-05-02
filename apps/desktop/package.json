@@ -3,12 +3,12 @@
   "productName": "buildtray",
   "private": true,
   "version": "1.0.0",
-  "description": "Vite React Electron boilerplate.",
-  "author": "草鞋没号 <308487730@qq.com>",
+  "description": "buildtray api",
+  "author": "Hacksore",
   "license": "MIT",
   "main": "build/main/index.cjs",
   "scripts": {
-    "start": "node scripts/watch.mjs",
+    "start": "wait-on tcp:5001 && node scripts/watch.mjs",
     "build": "tsc --noEmit -p tsconfig.json && node scripts/build.mjs",
     "pack": "node scripts/package.mjs"
   },
@@ -38,6 +38,7 @@
     "@reduxjs/toolkit": "^1.8.1",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "wait-on": "^6.0.1"
   }
 }

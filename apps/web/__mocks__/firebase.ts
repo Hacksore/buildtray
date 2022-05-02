@@ -22,21 +22,59 @@ class FirebaseService extends EventEmitter {
     return Promise.resolve([
       {
         commit: {
-          sha: "test",
-          message: "test",
-          author: "test",
+          sha: "42cf82a3950948fd0628e7faac3f3ff3ceeb835d",
+          message: "Fix build",
+          author: "Hacksore",
         },
-        id: "test",
+        id: "2247433475",
         status: "queued",
-        branch: "test",
-        createdAt: 123,
-        fullName: "test",
-        org: "test",
+        branch: "masster",
+        createdAt: 1651518315,
+        fullName: "Hacksore/test",
+        org: "Hacksore",
         repo: "test",
-        url: "test",
+        url: "https://github.com/Hacksore/test/actions/runs/2247433475",
         user: {
-          sender: "test",
-          avatarUrl: "test",
+          sender: "Hacksore",
+          avatarUrl: "https://avatars.githubusercontent.com/u/996134?v=4",
+        },
+      },
+      {
+        commit: {
+          sha: "42cf82a3950948fd0628e7faac3f3ff3c123",
+          message: "Fix build",
+          author: "Hacksore",
+        },
+        id: "2247433475",
+        status: "completed",
+        branch: "masster",
+        createdAt: 1651518315,
+        fullName: "Hacksore/test",
+        org: "Hacksore",
+        repo: "test",
+        url: "https://github.com/Hacksore/test/actions/runs/2247433475",
+        user: {
+          sender: "Hacksore",
+          avatarUrl: "https://avatars.githubusercontent.com/u/996134?v=4",
+        },
+      },
+      {
+        commit: {
+          sha: "42cf82a3950948fd0628e7faac3f3565eb835d",
+          message: "Break build",
+          author: "Hacksore",
+        },
+        id: "2247433475",
+        status: "failed",
+        branch: "masster",
+        createdAt: 1651518315,
+        fullName: "Hacksore/bluelink",
+        org: "Hacksore",
+        repo: "test",
+        url: "https://github.com/Hacksore/test/actions/runs/2247433475",
+        user: {
+          sender: "Hacksore",
+          avatarUrl: "https://avatars.githubusercontent.com/u/996134?v=4",
         },
       },
     ] as IBuildInfo[]);
@@ -50,6 +88,6 @@ class FirebaseService extends EventEmitter {
 export default new FirebaseService();
 
 export function firebaseDecorator(story: any, { parameters }: { parameters: any }) {
-
   return story();
 }
+

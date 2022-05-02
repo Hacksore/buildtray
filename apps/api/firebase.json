@@ -1,6 +1,9 @@
 {
   "functions": {
-    "source": "."
+    "source": ".",
+    "predeploy": [
+      "npm run build"
+    ]
   },
   "database": {
     "rules": "database.rules.json"

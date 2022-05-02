@@ -1,4 +1,4 @@
-name: CI/CD
+name: ci
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
 
 env:
   NODE_VERSION: "16"
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
 jobs:
   build-and-deploy:
@@ -21,12 +22,7 @@ jobs:
           node-version: "${{ env.NODE_VERSION }}"
       - name: Install
         run: npm ci
-      - name: Build
-        run: npm run build -w api
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy
-        env:
-          PROJECT_PATH: apps/api
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy API
+        run: npm run deploy --scope=api
+      - name: Deploy Web
+        run: npm run deploy --scope=web

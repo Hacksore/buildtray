@@ -53,7 +53,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-
 const ListItem = ({ fullName, status, commit, createdAt, url }: IBuildInfo) => {
   return (
     <Box onClick={() => window.electron.openInBrowser(url)} className="build">
@@ -76,8 +75,7 @@ export const BuildsList = () => {
 
   // REST CALL RETURNS ALL REPOS YOU ARE SUBBED TO
   const { isLoading: isReposLoading, data: subscribedRepos } = useQuery("subscribedRepos", getSubscribedRepos, {
-    initialData: [
-    ],
+    initialData: [],
   });
 
   // watch for repo builds i've subbed to
@@ -112,23 +110,24 @@ export const BuildsList = () => {
     });
 
     return () => firebaseService.clearAllListeners();
-
   }, [subscribedRepos]);
 
-  const sortedBuilds = [...builds].sort((a: IBuildInfo, b: IBuildInfo) => {
+  const sortedBuilds = [...builds].sort((a: IBuildInfo) => {
     if (a.status === "queued") {
       return -1;
     }
-    
+
     return 0;
   });
 
   return (
     <StyledBox>
       <Box className="wrapper">
-        {sortedBuilds.map((build: IBuildInfo, id) => (
-          <ListItem key={`${build.id}-${id}`} {...build} />
-        ))}
+        {isReposLoading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />)
+        )}
       </Box>
     </StyledBox>
   );
