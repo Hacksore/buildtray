@@ -23,6 +23,6 @@ jobs:
       - name: Install
         run: npm ci
       - name: Deploy API
-        run: npm run deploy --scope=api
+        run: npm run deploy:api
       - name: Deploy Web
-        run: npm run deploy --scope=web
+        run: npm run deploy:web

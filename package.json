@@ -10,8 +10,10 @@
     "start": "turbo run start --no-deps --parallel  --scope='api' --scope='desktop' --scope='web'",
     "dev": "turbo run start --parallel --scope='api' --scope='web'",
     "storybook": "turbo run storybook --no-deps --scope='web'",
-    "build": "turbo run build --no-deps",
+    "build": "turbo run build --no-deps --scope='web' --scope='api'",
     "deploy": "turbo run deploy --no-deps",
+    "deploy:api": "turbo run deploy --no-deps --scope='api'",
+    "deploy:web": "turbo run deploy --no-deps --scope='web'",
     "lint": "turbo run lint",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
