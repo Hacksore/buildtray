@@ -39,4 +39,5 @@ export const authenticate = async (req: Request, res, next) => {
     res.status(401).send("Unauthorized");
     return;
   }
+
 };
