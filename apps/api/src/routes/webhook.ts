@@ -1,8 +1,9 @@
 import express from "express";
 
 const router = express.Router();
-import { addBuildEntry, createRepoEntry, removeRepoEntry } from "../api";
+import { addBuildEntry, createOrUpdateRepoEntry, removeRepoEntry } from "../api";
 
+// https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#webhook-payload-object-40
 router.post("/webhook", async (req, res) => {
   const body = req.body;
 
@@ -11,11 +12,11 @@ router.post("/webhook", async (req, res) => {
   }
 
   if (body.action === "added") {
-    createRepoEntry(body.repositories_added);
+    createOrUpdateRepoEntry(body.repositories_added);
   }
 
   if (body.action === "created") {
-    createRepoEntry(body.repositories);
+    createOrUpdateRepoEntry(body.repositories);
   }
 
   if (body.action === "deleted") {

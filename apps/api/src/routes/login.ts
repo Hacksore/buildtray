@@ -1,8 +1,6 @@
 import express from "express";
-import { db } from "../firebase";
-import { getUsersRepos } from "../api";
+import { updateAllUsersRepos } from "../api";
 import { userProfile } from "../util/github";
-import { encodeRepo } from "shared/utils/naming";
 
 const router = express.Router();
 
@@ -22,7 +20,8 @@ router.post("/login", async (req: any, res) => {
     token: firebaseToken,
   };
 
-  // TODO: pull users repos
+  // pull all users repos in from github on login
+  await updateAllUsersRepos(req.session.github.user.id, req.session.github.token);
 
   res.send({ message: "Logged in to the API" });
 });

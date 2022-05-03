@@ -86,15 +86,19 @@ router.get("/repos/subscribed", async (req: any, res) => {
  * all the public repos that user can see or has access to
  */
 router.get("/repos/all", async (req: any, res) => {
-  const path = `users/${req.session.github.user.id}/repos`;
-  const doc = await db.ref(path).once("value");
+  const userId = req.session.github.user.id;
+  const doc = await db.ref(`users/${userId}/repos`).once("value");
   const items = doc.val();
 
   const repos: any[] = [];
-  for (const [entity, item] of Object.entries(items)) {
-    for (const repo of Object.keys(item as any)) {
-      repos.push({ fullName: `${entity}/${repo}` });
-    }
+  for (const [id] of Object.entries(items)) {
+    const metadata = await db.ref(`repos/${id}/metadata`).once("value");
+    const isSubscribed = await db.ref(`users/${userId}/subscriptions/${id}`).once("value");
+    repos.push({
+      ...metadata.val(),
+      id,
+      isSubscribed: isSubscribed.exists(),
+    });
   }
 
   res.json(repos);

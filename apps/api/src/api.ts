@@ -1,21 +1,31 @@
 import { db } from "./firebase.js";
-import got from "got";
 import IBuildInfo from "shared/types/IBuildInfo";
-import { encodeRepo } from "shared/utils/naming";
+import { encodeRepo, entityAndRepo } from "shared/utils/naming";
+import { getAllUsersRepos } from "./util/github.js";
 
-export const createRepoEntry = items => {
+/**
+ * Create a new repo entry in the database for each item
+ * @param items list of repos from github
+ */
+export const createOrUpdateRepoEntry = items => {
   items.forEach(item => {
-    db.ref(`repos/${encodeRepo(item.full_name)}`).set({
-      installed: true,
-      private: true,
+    db.ref(`repos/${item.id}`).set({
+      metadata: {
+        fullName: item.full_name,
+        private: item.private
+      },
     });
   });
 };
 
+/**
+ * When a new webhook build is sent it this will add the build to the repo build list
+ * @param item
+ */
 export const addBuildEntry = item => {
   const fullName = item.repository.full_name;
   const id = item.workflow_run.id;
-  db.ref(`repos/${encodeRepo(fullName)}/builds/${id}`).set({
+  db.ref(`repos/${item.repository.id}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
     status: item.workflow_run.status,
     branch: item.workflow_run.head_branch,
@@ -29,7 +39,6 @@ export const addBuildEntry = item => {
     repo: item.repository.name,
     url: item.workflow_run.html_url,
     user: {
-      // TODO: this needs much work
       sender: item.sender.login,
       avatarUrl: item?.sender?.avatar_url,
     },
@@ -45,64 +54,20 @@ export const removeRepoEntry = items => {
 
 /**
  *
- * @param token Github access token
- * @returns
+ * @param id github user id
+ * @param token github access token
  */
-export const getUsersRepos = async token => {
-  let index = 1;
-  const results: any[] = [];
-  const maxPerPage = 100;
-  while (true) {
-    // TODO: one issue is that this only works for public repos with the token we have
-    const res: any = await got(`https://api.github.com/user/repos?per_page=${maxPerPage}&page=${index}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).json();
-
-    res.forEach(item => {
-      results.push({
-        fullName: item.full_name,
-      });
-    });
-
-    if (res.length < maxPerPage) {
-      break;
-    }
-
-    index++;
-  }
-
-  return results;
-};
-
-export const getUserRepos = async (id, token ) => {
+export const updateAllUsersRepos = async (id, token) => {
   const path = `users/${id}/repos`;
-
-  // TODO: move this to a func and call here
   const doc = await db.ref(path).once("value");
   if (!doc.exists()) {
-    const repos = await getUsersRepos(token);
+    const repos = await getAllUsersRepos(token);
     const dict = {};
 
     repos.forEach(item => {
-      const safeRepoName = encodeRepo(item.fullName);
-      const [entity, repo] = safeRepoName.split("/");
-
-      if (dict[entity] === undefined) {
-        dict[entity] = {
-          [repo]: true,
-        };
-      } else {
-        dict[entity] = {
-          ...dict[entity],
-          [repo]: true,
-        };
-      }
+      dict[item.id] = true;
     });
 
     db.ref(path).set(dict);
-
   }
-}
+};
