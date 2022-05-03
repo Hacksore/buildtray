@@ -29,7 +29,7 @@ router.delete("/repo/subscribe", async (req: any, res) => {
  */
 router.post("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
-  const id = req.id;
+  const id = req.session.github.user.id;
   const { entity, repo } = body;
   const path = `users/${id}/repos/${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
 
@@ -77,7 +77,7 @@ router.get("/repos/subscribed", async (req: any, res) => {
  * all the public repos that user can see or has access to
  */
 router.get("/repos/all", async (req: any, res) => {
-  const path = `users/${req.id}`;
+  const path = `users/${req.session.github.user.id}`;
   const doc = await db.ref(path).once("value");
   const items = doc.val();
 

@@ -15,6 +15,9 @@
     "ui": {
       "enabled": true
     },
+    "firestore": {
+      "enabled": true
+    },
     "database": {
       "port": 9000
     }

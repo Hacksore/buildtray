@@ -9,6 +9,7 @@ module.exports = {
   ],
   rules: {
     "no-console": 1,
+    "@typescript-eslint/ban-ts-comment": 0,
     "quotes": [1, "double", { "avoidEscape": true }],
     "semi": [1, "always"],
   },

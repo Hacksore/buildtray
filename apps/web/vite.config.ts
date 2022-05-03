@@ -11,6 +11,7 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:5001/buildtray/us-central1",
         changeOrigin: true,
+        cookieDomainRewrite: "http://localhost:5001"
       },
     },
   },

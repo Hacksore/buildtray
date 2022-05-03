@@ -53,6 +53,7 @@ app.whenReady().then(() => {
   });
 
   trayWin?.addListener("blur", () => trayWin?.hide());
+  trayWin?.webContents.openDevTools();
 
   // hide app icon in dock for macos
   app.dock.hide();
