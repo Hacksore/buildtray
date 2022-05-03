@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "react-query";
-
 import {queryClient } from "../main";
 import { useEffect } from "react";
 import { getAllUserRepos, unsubscribeFromRepo } from "../api/user";

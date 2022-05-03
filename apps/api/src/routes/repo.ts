@@ -10,7 +10,7 @@ const router = express.Router();
 router.delete("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
   const { entity, repo } = body;
-  
+
   const fullName = encodeRepo(`${entity}/${repo}`);
 
   const doc = await db.ref(`repos/${fullName}`).once("value");
@@ -50,9 +50,8 @@ router.post("/repo/subscribe", async (req: any, res) => {
  * All the repos the current user has subscribed to
  */
 router.get("/repos/subscribed", async (req: any, res) => {
-  const id = req.id;
-  const path = `users/${id}/repos`;
-
+  const id = req.session.github.user.id;
+  const path = `users/${id}/subscriptions`;
   const doc = await db.ref(path).once("value");
 
   if (!doc.exists()) {
@@ -60,13 +59,9 @@ router.get("/repos/subscribed", async (req: any, res) => {
   }
 
   const repos: any[] = [];
-  for (const [k, v] of Object.entries(doc.val())) {
-    for (const repo of Object.keys(v as any)) {
-      repos.push({
-        repo,
-        entity: k,
-        fullName: `${k}/${repo}`,
-      });
+  for (const [owner, v] of Object.entries(doc.val())) {
+    for (const [repo] of Object.entries(v)) {
+      repos.push({ fullName: `${owner}/${repo}` });
     }
   }
 
@@ -86,10 +81,10 @@ router.get("/repos/all", async (req: any, res) => {
     for (const repo of Object.keys(item as any)) {
       const fullName = `${safeName(entity)}/${safeName(repo)}`;
       const subRef = await db.ref(`users/${userId}/subscriptions/${fullName}`).once("value");
-      repos.push({ 
+      repos.push({
         fullName: `${entity}/${repo}`,
         isSubscribed: subRef.exists(),
-       });
+      });
     }
   }
 
