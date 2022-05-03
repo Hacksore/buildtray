@@ -20,7 +20,7 @@ declare module "express" {
       id: any;
       githubToken: string
     }
-  }
+  } 
 }
 
 app.use(

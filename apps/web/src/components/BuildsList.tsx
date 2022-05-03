@@ -8,6 +8,7 @@ import { getSubscribedRepos } from "../api/user";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import firebaseService from "service/firebase";
 import { buildSlice } from "../reducers/buildReducer";
+import moment from "moment";
 
 const { addBuild, updateBuild } = buildSlice.actions;
 
@@ -54,15 +55,19 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const ListItem = ({ fullName, status, commit, createdAt, url }: IBuildInfo) => {
+  const timeAgo = moment.unix(createdAt).fromNow();
   return (
     <Box onClick={() => window.electron.openInBrowser(url)} className="build">
       <Box className="title">
         <Box className={clsx("status-icon", { [status]: true })} />
         <Typography>{fullName}</Typography>
       </Box>
-      <Box className="desc">
-        <Typography>
-          {commit.author} - {commit.message} - {createdAt}
+      <Box sx={{ display: "flex" }} className="desc">
+        <Typography sx={{ mr: 1, flex: 3 }}>
+          {commit.author} -   {commit.message}
+        </Typography>
+        <Typography sx={{ mr: 1 }}>
+          {timeAgo}
         </Typography>
       </Box>
     </Box>

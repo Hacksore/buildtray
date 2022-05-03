@@ -76,3 +76,33 @@ export const getUsersRepos = async token => {
 
   return results;
 };
+
+export const getUserRepos = async (id, token ) => {
+  const path = `users/${id}/repos`;
+
+  // TODO: move this to a func and call here
+  const doc = await db.ref(path).once("value");
+  if (!doc.exists()) {
+    const repos = await getUsersRepos(token);
+    const dict = {};
+
+    repos.forEach(item => {
+      const safeRepoName = encodeRepo(item.fullName);
+      const [entity, repo] = safeRepoName.split("/");
+
+      if (dict[entity] === undefined) {
+        dict[entity] = {
+          [repo]: true,
+        };
+      } else {
+        dict[entity] = {
+          ...dict[entity],
+          [repo]: true,
+        };
+      }
+    });
+
+    db.ref(path).set(dict);
+
+  }
+}

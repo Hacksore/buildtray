@@ -1,4 +1,5 @@
 import express from "express";
+import { encodeRepo } from "shared/utils/naming";
 import { db } from "../firebase";
 
 const router = express.Router();
@@ -11,6 +12,7 @@ router.delete("/repo/subscribe", async (req: any, res) => {
   console.log(body);
   const id = req.id;
   const { entity, repo } = body;
+
   const path = `users/${id}/repos/${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
 
   const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
@@ -31,19 +33,26 @@ router.post("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
   const id = req.session.github.user.id;
   const { entity, repo } = body;
-  const path = `users/${id}/repos/${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
+  const repoPath = encodeRepo(`${entity}/${repo}`);
+  const path = `users/${id}/repos/${repoPath}`;
+  const doc = await db.ref(`repos/${repoPath}`).once("value");
 
-  const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
-  console.log(`Checking repos/${entity}/${repo} for a valid app insatll`);
+  console.log(`Checking repos/${repoPath} for a valid app install`);
   if (!doc.exists()) {
-    return res.status(500).send({ error: `${entity}/${repo} does not have the app installed` });
+    return res.status(500).send({ error: `${repoPath} does not have the app installed` });
   }
 
+  const currentRepos = doc.val();
+
   db.ref(path).set({
+    repos: {
+      ...currentRepos.repos,
+      repoPath,
+    },
     notifications: true,
   });
 
-  res.send({ message: `Enabled notifications to ${path}` });
+  res.send({ message: `Enabled notifications to ${repoPath}` });
 });
 
 /**
@@ -77,7 +86,7 @@ router.get("/repos/subscribed", async (req: any, res) => {
  * all the public repos that user can see or has access to
  */
 router.get("/repos/all", async (req: any, res) => {
-  const path = `users/${req.session.github.user.id}`;
+  const path = `users/${req.session.github.user.id}/repos`;
   const doc = await db.ref(path).once("value");
   const items = doc.val();
 

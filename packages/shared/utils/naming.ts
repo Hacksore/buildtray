@@ -9,6 +9,14 @@ export const encodeRepo = (fullName: string) => {
     return encodeURIComponent(name.toLocaleLowerCase()).replace(/\./g, "%2e");
   };
 
-  const [owner, repo] = fullName.split("/");
+  const [owner, repo] = entityAndRepo(fullName);
   return `${safeName(owner)}/${safeName(repo)}`;
+};
+
+/**
+ * Get the ent and repo from a full name
+ */
+export const entityAndRepo = (fullName: string) => {
+  const [owner, repo] = fullName.split("/");
+  return [owner, repo];
 };

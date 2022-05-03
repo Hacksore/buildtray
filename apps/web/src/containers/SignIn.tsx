@@ -6,8 +6,6 @@ import { app, auth } from "../main";
 
 export default function SignIn() {
   const navigate = useNavigate();
-
-
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
     const result = await signInWithPopup(auth, provider);
