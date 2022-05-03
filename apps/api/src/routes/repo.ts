@@ -1,5 +1,5 @@
 import express from "express";
-import { encodeRepo } from "shared/utils/naming";
+import { encodeRepo, safeName } from "shared/utils/naming";
 import { db } from "../firebase";
 
 const router = express.Router();
@@ -9,18 +9,18 @@ const router = express.Router();
  */
 router.delete("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
-  console.log(body);
-  const id = req.id;
   const { entity, repo } = body;
+  
+  const fullName = encodeRepo(`${entity}/${repo}`);
 
-  const path = `users/${id}/repos/${entity.toLowerCase()}/${repo.toLowerCase()}`.replaceAll(".", "/").toLowerCase();
-
-  const doc = await db.ref(`repos/${entity}/${repo}`).once("value");
-  console.log(`Checking repos/${entity}/${repo} for a valid app insatll`);
+  const doc = await db.ref(`repos/${fullName}`).once("value");
+  console.log(`Checking repos/${fullName} for a valid app install`);
   if (!doc.exists()) {
-    return res.status(500).send({ error: `${entity}/${repo} does not have the app installed` });
+    return res.status(500).send({ error: `${fullName} does not have the app installed` });
   }
 
+  const id = req.session.github.user.id;
+  const path = `users/${id}/subscriptions/${fullName}`;
   db.ref(path).set(null);
 
   res.send({ message: `Unsubbed from ${path}` });
@@ -33,26 +33,17 @@ router.post("/repo/subscribe", async (req: any, res) => {
   const body = req.body;
   const id = req.session.github.user.id;
   const { entity, repo } = body;
-  const repoPath = encodeRepo(`${entity}/${repo}`);
-  const path = `users/${id}/repos/${repoPath}`;
-  const doc = await db.ref(`repos/${repoPath}`).once("value");
+  const fullName = encodeRepo(`${entity}/${repo}`);
+  const doc = await db.ref(`repos/${fullName}`).once("value");
 
-  console.log(`Checking repos/${repoPath} for a valid app install`);
+  console.log(`Checking repos/${fullName} for a valid app install`);
   if (!doc.exists()) {
-    return res.status(500).send({ error: `${repoPath} does not have the app installed` });
+    return res.status(500).send({ error: `${fullName} does not have the app installed` });
   }
 
-  const currentRepos = doc.val();
+  db.ref(`users/${id}/subscriptions/${fullName}`).set(true);
 
-  db.ref(path).set({
-    repos: {
-      ...currentRepos.repos,
-      repoPath,
-    },
-    notifications: true,
-  });
-
-  res.send({ message: `Enabled notifications to ${repoPath}` });
+  res.send({ message: `Enabled notifications to ${fullName}` });
 });
 
 /**
@@ -91,14 +82,15 @@ router.get("/repos/all", async (req: any, res) => {
   const items = doc.val();
 
   const repos: any[] = [];
-  for (const [id] of Object.entries(items)) {
-    const metadata = await db.ref(`repos/${id}/metadata`).once("value");
-    const isSubscribed = await db.ref(`users/${userId}/subscriptions/${id}`).once("value");
-    repos.push({
-      ...metadata.val(),
-      id,
-      isSubscribed: isSubscribed.exists(),
-    });
+  for (const [entity, item] of Object.entries(items)) {
+    for (const repo of Object.keys(item as any)) {
+      const fullName = `${safeName(entity)}/${safeName(repo)}`;
+      const subRef = await db.ref(`users/${userId}/subscriptions/${fullName}`).once("value");
+      repos.push({ 
+        fullName: `${entity}/${repo}`,
+        isSubscribed: subRef.exists(),
+       });
+    }
   }
 
   res.json(repos);

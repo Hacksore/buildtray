@@ -34,6 +34,7 @@ export const userProfile = async accessToken => {
     res.forEach(item => {
       results.push({
         id: item.id,
+        fullName: item.full_name,
       });
     });
 

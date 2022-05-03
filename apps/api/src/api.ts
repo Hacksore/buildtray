@@ -9,10 +9,11 @@ import { getAllUsersRepos } from "./util/github.js";
  */
 export const createOrUpdateRepoEntry = items => {
   items.forEach(item => {
-    db.ref(`repos/${item.id}`).set({
+    const fullName = encodeRepo(item.full_name);
+    db.ref(`repos/${fullName}`).set({
       metadata: {
         fullName: item.full_name,
-        private: item.private
+        private: item.private,
       },
     });
   });
@@ -23,9 +24,9 @@ export const createOrUpdateRepoEntry = items => {
  * @param item
  */
 export const addBuildEntry = item => {
-  const fullName = item.repository.full_name;
+  const fullName = encodeRepo(item.repository.full_name);
   const id = item.workflow_run.id;
-  db.ref(`repos/${item.repository.id}/builds/${id}`).set({
+  db.ref(`repos/${fullName}/builds/${id}`).set({
     createdAt: Math.floor(+new Date() / 1000),
     status: item.workflow_run.status,
     branch: item.workflow_run.head_branch,
@@ -34,7 +35,7 @@ export const addBuildEntry = item => {
       message: item.workflow_run.head_commit.message,
       author: item.workflow_run.head_commit.author.name,
     },
-    fullName,
+    fullName: item.repository.full_name,
     org: item.repository.owner.login,
     repo: item.repository.name,
     url: item.workflow_run.html_url,
@@ -64,10 +65,21 @@ export const updateAllUsersRepos = async (id, token) => {
     const repos = await getAllUsersRepos(token);
     const dict = {};
 
+    // this is not pretty to look at :)
     repos.forEach(item => {
-      dict[item.id] = true;
+      const [owner, repo] = entityAndRepo(item.fullName);
+      if (dict[owner] === undefined) {
+        dict[owner] = {
+          [repo]: true,
+        };
+      } else {
+        dict[owner] = {
+          ...dict[owner],
+          [repo]: true,
+        };
+      }
     });
-
+    
     db.ref(path).set(dict);
   }
 };

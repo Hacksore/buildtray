@@ -31,13 +31,13 @@ export default function Dashboard() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 3 }}>
       {allUserRepos.map((repo: any) => {
-        const isSubscribed = false;
+        const isSubscribed = repo.isSubscribed;
 
         return (
           <Box
             key={repo.fullName}
             sx={{
-              backgroundColor: theme => (isSubscribed ? "green" : darken(theme.palette.background.default, 0.3)),
+              backgroundColor: theme => (isSubscribed ? darken(theme.palette.background.default, 0.6) : darken(theme.palette.background.default, 0.3)),
               width: "100%",
               height: 48,
               margin: 1,
@@ -63,7 +63,7 @@ export default function Dashboard() {
                       },
                       {
                         onSuccess: () => {
-                          queryClient.invalidateQueries("subscribedRepos");
+                          queryClient.invalidateQueries("allUserRepos");
                         },
                       }
                     );

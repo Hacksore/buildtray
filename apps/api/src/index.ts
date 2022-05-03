@@ -16,9 +16,12 @@ const router = express.Router();
 declare module "express" {
   interface Request {
     session: {
-      user: any;
-      id: any;
-      githubToken: string
+      github: {
+        user: {
+          id: string;
+          token: string
+        }
+      }
     }
   } 
 }
