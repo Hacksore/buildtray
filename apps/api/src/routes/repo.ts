@@ -80,10 +80,11 @@ router.get("/repos/all", async (req: any, res) => {
   for (const [entity, item] of Object.entries(items)) {
     for (const repo of Object.keys(item as any)) {
       const fullName = `${safeName(entity)}/${safeName(repo)}`;
-      const subRef = await db.ref(`users/${userId}/subscriptions/${fullName}`).once("value");
+      // TODO: we can't do this it's way to expensive
+      // const subRef = await db.ref(`users/${userId}/subscriptions/${fullName}`).once("value");
       repos.push({
         fullName: `${entity}/${repo}`,
-        isSubscribed: subRef.exists(),
+        // isSubscribed: subRef.exists(),
       });
     }
   }

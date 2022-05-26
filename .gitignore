@@ -38,3 +38,4 @@ dist/
 .firebase/
 
 *.log.turbo
+*.log

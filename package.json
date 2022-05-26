@@ -7,18 +7,15 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "turbo run start --no-deps --scope='api' --scope='desktop' --scope='web'",
-    "dev": "turbo run start --no-deps --scope='api' --scope='web'",
-    "storybook": "turbo run storybook --no-deps --scope='web'",
-    "build": "turbo run build --no-deps --scope='web' --scope='api'",
-    "deploy": "turbo run deploy --no-deps",
-    "deploy:api": "turbo run deploy --no-deps --scope='api'",
-    "deploy:web": "turbo run deploy --no-deps --scope='web'",
+    "start": "concurrently npm:dev npm:emulator",
+    "emulator": "firebase emulators:start",
+    "dev": "turbo run start --scope='web'",
     "lint": "turbo run lint",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
   },
   "devDependencies": {
+    "concurrently": "^7.2.1",
     "firebase-tools": "^10.7.2",
     "prettier": "^2.5.1",
     "turbo": "^1.2.14"
