@@ -6,7 +6,7 @@
     "server": "firebase emulators:start --import=seed",
     "build": "rimraf ./dist/**/* && rollup -c rollup.config.js",
     "deploy": "firebase deploy --only functions",
-    "export": "firebase emulators:export seed"
+    "export": "firebase emulators:export seed --project buildtray"
   },
   "engines": {
     "node": "16"

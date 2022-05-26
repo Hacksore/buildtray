@@ -12,7 +12,8 @@
     "dev": "turbo run start --scope='web'",
     "lint": "turbo run lint",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
-    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
+    "export": "npm run export -w api"
   },
   "devDependencies": {
     "concurrently": "^7.2.1",
