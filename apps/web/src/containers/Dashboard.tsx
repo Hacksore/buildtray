@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "react-query";
 import {queryClient } from "../main";
 import { useEffect } from "react";
 import { getAllUserRepos, unsubscribeFromRepo } from "../api/user";
-import firebaseService from "../service/firebase";
+import firebaseService from "service/firebase";
 import { Button, Tooltip } from "@mui/material";
 import { Box } from "@mui/system";
 import { darken } from "@mui/system";
