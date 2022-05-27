@@ -1,6 +1,6 @@
 import { darken, createTheme } from "@mui/material/styles";
 
-let theme = createTheme({
+let darkTheme = createTheme({
   palette: {
     mode: "dark",
     background: {
@@ -30,21 +30,21 @@ let theme = createTheme({
 });
 
 // overrides with access to the theme here
-theme = createTheme(theme, {
+darkTheme = createTheme(darkTheme, {
   components: {
     MuiTooltip: {
       styleOverrides: {
         arrow: {
-          color: theme.palette.background.default,
+          color: darkTheme.palette.background.default,
           "&::before": {
             // apply to the border of the arrow
             border: "1px solid #3a3a3a",
-            backgroundColor: darken(theme.palette.background.default, 0.2),
+            backgroundColor: darken(darkTheme.palette.background.default, 0.2),
             boxSizing: "border-box",
           },
         },
         tooltip: {
-          backgroundColor: darken(theme.palette.background.default, 0.2),
+          backgroundColor: darken(darkTheme.palette.background.default, 0.2),
           border: "1px solid #3a3a3a",
           fontSize: 20,
         },
@@ -53,4 +53,54 @@ theme = createTheme(theme, {
   },
 });
 
-export { theme };
+let lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    background: {
+      default: "#fff",
+      paper: "#fff",
+    },
+    error: {
+      main: "#db5151",
+    },
+    primary: {
+      main: "#717FCA",
+      contrastText: "#fff",
+    },
+    text: {
+      primary: "#000",
+      disabled: "#000",
+    },
+    secondary: {
+      main: "#747474",
+      contrastText: "#fff",
+    },
+
+  },
+});
+
+// overrides with access to the theme here
+lightTheme = createTheme(lightTheme, {
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        arrow: {
+          color: lightTheme.palette.background.default,
+          "&::before": {
+            // apply to the border of the arrow
+            border: "1px solid #3a3a3a",
+            backgroundColor: darken(lightTheme.palette.background.default, 0.2),
+            boxSizing: "border-box",
+          },
+        },
+        tooltip: {
+          backgroundColor: darken(lightTheme.palette.background.default, 0.2),
+          border: "1px solid #3a3a3a",
+          fontSize: 20,
+        },
+      },
+    },
+  },
+});
+
+export { lightTheme, darkTheme };

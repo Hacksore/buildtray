@@ -1,5 +1,19 @@
-export const safeName = (name: string) => {
-  return encodeURIComponent(name.toLocaleLowerCase()).replace(/\./g, "%2e");
+/**
+ * Replace all occurrences of url characters that can be encoded with their spective url encoding, inlcuding period as well
+ * @param string a string to santize
+ * @returns a string santized string
+ */
+export const safeName = (string: string) => {
+  return encodeURIComponent(string.toLocaleLowerCase()).replace(/\./g, "%2e");
+};
+
+/**
+ * Replace all occurrences characters that are url encoded with their normal values, inlcuding %2e
+ * @param string a string to desantize
+ * @returns a desantized string
+ */
+export const unsafeName = (string: string) => {
+  return decodeURIComponent(string.toLocaleLowerCase()).replace(/%2e/g, ".");
 };
 
 /**
@@ -24,6 +38,6 @@ export const entityAndRepo = (fullName: string) => {
 /**
  * Convert a owner/repo to a safe name
  */
-export const entityAndRepoToSafeName = (owner, repo) => {
+export const entityAndRepoToSafeName = (owner: string, repo: string) => {
   return `${safeName(owner)}/${safeName(repo)}`;
 };
