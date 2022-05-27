@@ -78,6 +78,14 @@ function Dashboard() {
         This page displays all the repos you have granted Buildtray access to. You can update repos we have acces to at
         anytime on the settings page.
       </Typography>
+      <Box>
+        <Button
+          target="_blank"
+          href={import.meta.env.VITE_BUILDTRAY_APP_URL}
+        >
+          <Typography>Install app to your github account</Typography>
+        </Button>
+      </Box>
 
       <RepoFilter />
 
