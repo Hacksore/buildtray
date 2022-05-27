@@ -1,9 +1,7 @@
 {
   "name": "api",
   "scripts": {
-    "start": "concurrently npm:build:watch npm:server",
-    "build:watch": "rollup -w -c rollup.config.js",
-    "server": "firebase emulators:start --import=seed",
+    "start": "rollup -w -c rollup.config.js",
     "build": "rimraf ./dist/**/* && rollup -c rollup.config.js",
     "deploy": "firebase deploy --only functions --project buildtray",
     "export": "firebase emulators:export seed --project buildtray"

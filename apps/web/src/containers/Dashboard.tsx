@@ -3,12 +3,11 @@ import { queryClient } from "../main";
 import { getAllUserRepos } from "../api/user";
 import { Button, darken, styled, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { subscribeToRepo } from "../api/user";
-import IBuildInfo from "shared/types/IBuildInfo";
+import { subscribeToRepo, unsubscribeFromRepo } from "../api/user";
+import IRepo from "shared/types/IRepo";
 import DefaultLayout from "./DefaultLayout";
 import { useLocation } from "react-router-dom";
 import { unsafeName } from "shared/utils/naming";
-import { Report } from "@mui/icons-material";
 import { RepoFilter } from "../components/RepoFilter";
 import { useSelector } from "react-redux";
 
@@ -30,14 +29,41 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 function Dashboard() {
   const searchTerm = useSelector((state: any) => state.main.repoFilterText);
-  const subscribedRepo: any = useMutation(data => subscribeToRepo(data));
-  const { isLoading, data: allUserRepos } = useQuery("allUserRepos", getAllUserRepos, {
+  
+  // @ts-ignore
+  const subMutation: any = useMutation((data: any) => {
+    if (data.type === "sub") {
+      subscribeToRepo(data);
+    } else {
+      unsubscribeFromRepo(data);
+    }
+  });
+
+  const { isLoading, data: allUserRepos } = useQuery("allRepos", getAllUserRepos, {
     initialData: [],
   });
 
+  // TODO: nice skelly?
   if (isLoading) {
     return <h2>loading....</h2>;
   }
+
+  const handleRepoSuscribe = (repo: IRepo) => {
+    const [entity, name] = repo.fullName.split("/");
+
+    subMutation.mutate(
+      {
+        type: repo.subscribed ? "unsub" : "sub",
+        entity,
+        repo: name,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries("allRepos");
+        },
+      }
+    );
+  };
 
   return (
     <StyledBox sx={{ display: "flex", flexDirection: "column", p: 3 }}>
@@ -49,30 +75,19 @@ function Dashboard() {
       <RepoFilter />
 
       {allUserRepos
-        .filter((item: IBuildInfo) => item.fullName.includes(searchTerm))
-        .map((repo: IBuildInfo) => {
+        .sort((a: IRepo) => a.subscribed || a.installed ? -1 : 1)
+        .filter((item: IRepo) => item.fullName.includes(searchTerm))
+        .map((repo: IRepo) => {
           return (
             <Box key={repo.fullName} className="item">
               <Typography sx={{ flex: 1 }}>{unsafeName(repo.fullName)}</Typography>
               <Button
+                disabled={!repo.installed}
                 size="small"
                 variant="contained"
-                onClick={() => {
-                  const [entity, name] = repo.fullName.split("/");
-                  subscribedRepo.mutate(
-                    {
-                      entity,
-                      repo: name,
-                    },
-                    {
-                      onSuccess: () => {
-                        queryClient.invalidateQueries("allUserRepos");
-                      },
-                    }
-                  );
-                }}
+                onClick={() => handleRepoSuscribe(repo)}
               >
-                Subscribe
+                {repo.subscribed ? "Unsubscribe" : "Subscribe"}
               </Button>
             </Box>
           );

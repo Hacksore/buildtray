@@ -9,7 +9,7 @@
   "scripts": {
     "start": "concurrently npm:dev npm:emulator",
     "emulator": "firebase emulators:start --import apps/api/seed",
-    "dev": "turbo run start --scope='web'",
+    "dev": "turbo run start --scope='web' --scope='api'",
     "lint": "turbo run lint",
     "deploy": "turbo run build --parallel && turbo run deploy --parallel",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",

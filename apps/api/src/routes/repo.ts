@@ -1,5 +1,5 @@
 import express from "express";
-import { encodeRepo, safeName } from "shared/utils/naming";
+import { encodeRepo, isValidRepo, safeName } from "shared/utils/naming";
 import { db } from "../firebase";
 
 const router = express.Router();
@@ -21,7 +21,10 @@ router.delete("/repo/subscribe", async (req: any, res) => {
 
   const id = req.session.github.user.id;
   const path = `users/${id}/subscriptions/${fullName}`;
-  db.ref(path).set(null);
+  await db.ref(path).set(null);
+
+  // update the repo data as well
+  await db.ref(`users/${id}/repos/${fullName}/subscribed`).set(false);
 
   res.send({ message: `Unsubbed from ${path}` });
 });
@@ -41,7 +44,10 @@ router.post("/repo/subscribe", async (req: any, res) => {
     return res.status(500).send({ error: `${fullName} does not have the app installed` });
   }
 
-  db.ref(`users/${id}/subscriptions/${fullName}`).set(true);
+  await db.ref(`users/${id}/subscriptions/${fullName}`).set(true);
+  await db.ref(`users/${id}/repos/${fullName}/subscribed`).set(true);
+
+  console.log("sub to repo");
 
   res.send({ message: `Enabled notifications to ${fullName}` });
 });
@@ -73,22 +79,28 @@ router.get("/repos/subscribed", async (req: any, res) => {
  */
 router.get("/repos/all", async (req: any, res) => {
   const userId = req.session.github.user.id;
-  const doc = await db.ref(`users/${userId}/repos`).once("value");
-  const items = doc.val();
+
+  const allUserRepos = (await db.ref(`users/${userId}/repos`).once("value")).val();
+  const allInstallRepos = (await db.ref(`repos`).once("value")).val();
 
   const repos: any[] = [];
-  for (const [entity, item] of Object.entries(items)) {
+  for (const [entity, item] of Object.entries(allUserRepos)) {
     for (const repo of Object.keys(item as any)) {
-      const fullName = `${safeName(entity)}/${safeName(repo)}`;
-      // TODO: we can't do this it's way to expensive
-      // const subRef = await db.ref(`users/${userId}/subscriptions/${fullName}`).once("value");
+      const safeEntity = safeName(entity);
+      const safeRepo = safeName(repo);
+      const fullName = `${safeEntity}/${safeRepo}`;
+      const subscribed = item[repo].subscribed;
+
       repos.push({
-        fullName: `${entity}/${repo}`,
-        // isSubscribed: subRef.exists(),
+        fullName,
+        subscribed,
+        installed: isValidRepo(allInstallRepos, fullName),
       });
     }
   }
 
+  console.log("get all repos");
+  
   res.json(repos);
 });
 

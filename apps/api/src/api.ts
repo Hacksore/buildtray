@@ -70,12 +70,16 @@ export const updateAllUsersRepos = async (id, token) => {
       const [owner, repo] = entityAndRepo(item.fullName);
       if (dict[owner] === undefined) {
         dict[owner] = {
-          [repo]: true,
+          [repo]: {
+            subscribed: false,
+          },
         };
       } else {
         dict[owner] = {
           ...dict[owner],
-          [repo]: true,
+          [repo]: {
+            subscribed: false,
+          },
         };
       }
     });

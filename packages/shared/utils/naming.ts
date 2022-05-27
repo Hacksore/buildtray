@@ -41,3 +41,16 @@ export const entityAndRepo = (fullName: string) => {
 export const entityAndRepoToSafeName = (owner: string, repo: string) => {
   return `${safeName(owner)}/${safeName(repo)}`;
 };
+
+/**
+ * Is a string a valid repo
+ */
+export const isValidRepo = (object: any, fullName: string) => {
+  const [entity, repo] = fullName.split("/");
+
+  if (object[entity] && object[entity][repo]) {
+    return true;
+  }
+
+  return false;
+};
