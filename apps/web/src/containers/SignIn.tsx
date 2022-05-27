@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import { getAuth, GithubAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GithubAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { initialSignin } from "../api/user";
 import { app, auth } from "../main";
@@ -8,22 +9,42 @@ export default function SignIn() {
   const navigate = useNavigate();
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    const credential = GithubAuthProvider.credentialFromResult(result);
-    
-    // if we have a token put it in the ducks
-    if (credential && credential.accessToken) {
-      const auth = getAuth(app);
-      await initialSignin({
-        githubToken: credential.accessToken,
-        // @ts-ignore
-        firebaseToken: auth.currentUser.accessToken
-      });
-
-      // redirect to the dashboard
-      navigate("/dashboard");
-    }
+    signInWithRedirect(auth, provider);
   };
+
+  useEffect(() => {
+    const fuckYouReact = async () => {
+      const auth = getAuth();
+      try {
+        
+        const result = await getRedirectResult(auth);
+
+        if (!result) {
+          return;        
+        }
+
+        const credential = GithubAuthProvider.credentialFromResult(result);
+
+        // if we have a token put it in the ducks
+        if (credential && credential.accessToken) {
+          const auth = getAuth(app);
+          await initialSignin({
+            githubToken: credential.accessToken,
+            // @ts-ignore
+            firebaseToken: auth.currentUser.accessToken,
+          });
+
+          // redirect to the dashboard
+          navigate("/dashboard");
+        }
+
+      } catch {
+        // do nothing
+      }
+    };
+
+    fuckYouReact();
+  }, []);
 
   return (
     <Box

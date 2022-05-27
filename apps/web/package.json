@@ -6,7 +6,7 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "firebase deploy --only hosting",
+    "deploy": "firebase deploy --only hosting --project buildtray",
     "lint": "eslint 'src/**/*.ts'",
     "storybook": "start-storybook -s public -p 6006",
     "build-storybook": "build-storybook"

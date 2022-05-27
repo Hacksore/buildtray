@@ -3,6 +3,8 @@ import session from "express-session";
 import * as functions from "firebase-functions";
 import { authenticate } from "./middleware/auth";
 
+import morgan from "morgan";
+
 import webhookRoute from "./routes/webhook";
 import loginRoute from "./routes/login";
 import repoRoute from "./routes/repo";
@@ -19,12 +21,19 @@ declare module "express" {
       github: {
         user: {
           id: string;
-          token: string
-        }
-      }
-    }
-  } 
+          token: string;
+        };
+      };
+    };
+  }
 }
+
+app.use((req, res, next) => {
+  functions.logger.log(req.path);
+  next();
+});
+
+app.use(morgan("combined"));
 
 app.use(
   session({
@@ -43,7 +52,7 @@ app.use(express.json());
 router.use(loginRoute);
 
 // product all the main routes
-// app.use(authenticate); 
+// app.use(authenticate);
 
 router.use(repoRoute);
 router.use(webhookRoute);
@@ -51,4 +60,4 @@ router.use(userRoute);
 
 app.use("/v1", router);
 
-export const api = functions.https.onRequest(app);
+export const server = functions.https.onRequest(app);
