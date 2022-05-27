@@ -7,8 +7,8 @@ const auth = admin.auth();
 
 // auth middleware to decode the JWT and validte it
 export const authenticate = async (req: Request, res, next) => {
+  // this is the secret that you setup on the github app
   const secret = config.github.webhook.secret;
-
   const secureHeader = req.headers["x-hub-signature-256"];
 
   if (secureHeader) {
@@ -16,27 +16,26 @@ export const authenticate = async (req: Request, res, next) => {
     const secretSha = "sha256=" + sha256Hasher.update(JSON.stringify(req.body)).digest("hex");
 
     if (secureHeader === secretSha) {
-      console.log("came from github no need to auth them");
+      console.log("This request came from github and was cryptographically verified");
       return next();
     }
   }
 
-  const idToken = req.session.githubToken;
-  if (!idToken) {
-    res.status(401).send("Unauthorized");
+  const jwtToken = req?.session?.firebase?.token;
+  if (!jwtToken) {
+    res.status(401).send("A valid token was not found on the sesssion");
     return;
   }
 
   try {
-    const decodedIdToken = await auth.verifyIdToken(idToken);
-
-    req.session.user = decodedIdToken;
-    req.session.id = decodedIdToken.firebase.identities["github.com"][0];
+    const decodedIdToken = await auth.verifyIdToken(jwtToken);
+    req.session.github.token = decodedIdToken.toString();
+    req.session.github.user.id = decodedIdToken.firebase.identities["github.com"][0];
 
     return next();
   } catch (e) {
     console.log(e);
-    res.status(401).send("Unauthorized");
+    res.status(401).send("Invalid session");
     return;
   }
 

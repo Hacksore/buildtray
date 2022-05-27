@@ -42,9 +42,6 @@
     "hosting": {
       "enabled": true,
       "port": "8080"
-    },
-    "auth": {
-      "port": 9099
     }
   }
 }

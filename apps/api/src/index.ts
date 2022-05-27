@@ -17,14 +17,7 @@ const app = express();
 const router = express.Router();
 declare module "express" {
   interface Request {
-    session: {
-      github: {
-        user: {
-          id: string;
-          token: string;
-        };
-      };
-    };
+    session: ISesssionData
   }
 }
 
@@ -44,10 +37,10 @@ app.use(
 app.use(express.json());
 
 // login route
-router.use(loginRoute);
+app.use("/api/v1", loginRoute);
 
 // product all the main routes
-// app.use(authenticate);
+app.use(authenticate);
 
 router.use(repoRoute);
 router.use(webhookRoute);
