@@ -39,3 +39,5 @@ dist/
 
 *.log.turbo
 *.log
+
+.runtimeconfig.json

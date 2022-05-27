@@ -7,7 +7,7 @@ const auth = admin.auth();
 
 // auth middleware to decode the JWT and validte it
 export const authenticate = async (req: Request, res, next) => {
-  const secret = config.app.github;
+  const secret = config.github.webhook.secret;
 
   const secureHeader = req.headers["x-hub-signature-256"];
 
