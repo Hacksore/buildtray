@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld("electron", {
   openInBrowser: (url: string) => {
     shell.openExternal(url);
   },
+  THIS_IS_ELECTRON_FOR_REAL: true,
 });

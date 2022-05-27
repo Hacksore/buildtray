@@ -6,6 +6,7 @@ interface IBuildInfo {
   };
   id: string;
   status: "queued" | "failure" | "completed";
+  conclusion: "failure" | "success";
   branch: string;
   createdAt: number;
   fullName: string;

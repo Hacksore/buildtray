@@ -45,26 +45,29 @@ const StyledBox = styled(Box)(({ theme }) => ({
     "&.queued": {
       background: "orange",
     },
-    "&.completed": {
+    "&.success": {
       background: "green",
     },
-    "&.failed": {
+    "&.failure": {
       background: "red",
     },
   },
 }));
 
-const handleElectronLaunch = (event: any) => {
-  // TODO: todo fix in electron
-  // () => window.electron.openInBrowser(url)
+const handleElectronLaunch = (event: any, url: string) => {
+  if (window.electron == undefined) {
+    event.preventDefault();
+    // window.electron.openInBrowser(url);
+  }
 };
 
-const ListItem = ({ fullName, status, commit, createdAt, url }: IBuildInfo) => {
+const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBuildInfo) => {
   const timeAgo = moment.unix(createdAt).fromNow();
+  const iconClass = status === "queued" ? "queued" : conclusion;
   return (
-    <a onClick={handleElectronLaunch} href={url} className="build">
+    <a onClick={(event) => handleElectronLaunch(event, url)} href={url} className="build">
       <Box className="title">
-        <Box className={clsx("status-icon", { [status]: true })} />
+        <Box className={clsx("status-icon", { [iconClass]: true })} />
         <Typography>{fullName}</Typography>
       </Box>
       <Box sx={{ display: "flex" }} className="desc">
