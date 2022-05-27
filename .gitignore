@@ -41,3 +41,5 @@ dist/
 *.log
 
 .runtimeconfig.json
+
+.env

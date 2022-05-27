@@ -1,4 +1,4 @@
-import { darken, lighten, styled } from "@mui/material";
+import { darken, styled } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -55,9 +55,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const handleElectronLaunch = (event: any, url: string) => {
-  if (window.electron == undefined) {
+  if (window.electron !== undefined) {
     event.preventDefault();
-    // window.electron.openInBrowser(url);
+    window.electron.openInBrowser(url);
   }
 };
 
@@ -65,7 +65,7 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
   const timeAgo = moment.unix(createdAt).fromNow();
   const iconClass = status === "queued" ? "queued" : conclusion;
   return (
-    <a onClick={(event) => handleElectronLaunch(event, url)} href={url} className="build">
+    <a onClick={(event) => handleElectronLaunch(event, url)} target="__blank" href={url} className="build">
       <Box className="title">
         <Box className={clsx("status-icon", { [iconClass]: true })} />
         <Typography>{fullName}</Typography>

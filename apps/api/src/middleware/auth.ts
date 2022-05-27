@@ -4,10 +4,10 @@ import { config } from "../firebase.js";
 import admin from "firebase-admin";
 
 const auth = admin.auth();
-
 // auth middleware to decode the JWT and validte it
 export const authenticate = async (req: Request, res, next) => {
-  // this is the secret that you setup on the github app
+
+  // this is the config we setup to use to validate the github webhook payload
   const secret = config.github.webhook.secret;
   const secureHeader = req.headers["x-hub-signature-256"];
 

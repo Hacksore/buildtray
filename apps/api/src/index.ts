@@ -17,7 +17,7 @@ const app = express();
 const router = express.Router();
 declare module "express" {
   interface Request {
-    session: ISesssionData
+    session: ISesssionData;
   }
 }
 
@@ -30,6 +30,7 @@ app.use(
     }),
     secret: "my-secret",
     resave: false,
+    name: "__session",
     saveUninitialized: false,
   })
 );
