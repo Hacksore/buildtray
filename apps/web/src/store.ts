@@ -11,7 +11,7 @@ const logger = createLogger({
 });
 
 export const store = configureStore({
-  reducer: {    
+  reducer: {
     main: mainSlice,
     // TODO: rename
     builds: buildsReducer,

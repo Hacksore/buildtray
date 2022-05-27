@@ -84,7 +84,7 @@ export const updateAllUsersRepos = async (id, token) => {
         };
       }
     });
-    
+
     db.ref(path).set(dict);
   }
 };

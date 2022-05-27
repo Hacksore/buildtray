@@ -13,8 +13,7 @@ import moment from "moment";
 const { addBuild, updateBuild } = buildSlice.actions;
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  "& .wrapper": {
-  },
+  "& .wrapper": {},
   "& .build": {
     textDecoration: "none",
     color: theme.palette.text.primary,
@@ -65,18 +64,16 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
   const timeAgo = moment.unix(createdAt).fromNow();
   const iconClass = status === "queued" ? "queued" : conclusion;
   return (
-    <a onClick={(event) => handleElectronLaunch(event, url)} target="__blank" href={url} className="build">
+    <a onClick={event => handleElectronLaunch(event, url)} target="__blank" href={url} className="build">
       <Box className="title">
         <Box className={clsx("status-icon", { [iconClass]: true })} />
         <Typography>{fullName}</Typography>
       </Box>
       <Box sx={{ display: "flex" }} className="desc">
         <Typography sx={{ mr: 1, flex: 3 }}>
-          {commit.author} -   {commit.message}
+          {commit.author} - {commit.message}
         </Typography>
-        <Typography sx={{ mr: 1 }}>
-          {timeAgo}
-        </Typography>
+        <Typography sx={{ mr: 1 }}>{timeAgo}</Typography>
       </Box>
     </a>
   );

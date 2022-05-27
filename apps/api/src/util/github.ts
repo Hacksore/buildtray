@@ -19,7 +19,7 @@ export const userProfile = async accessToken => {
  * @param token Github access token
  * @returns {Promise<Array<{fullName: string, owner: string, repo: string}>>}
  */
- export const getAllUsersRepos = async token => {
+export const getAllUsersRepos = async token => {
   let index = 1;
   const results: any[] = [];
   const maxPerPage = 100;
@@ -48,11 +48,7 @@ export const userProfile = async accessToken => {
   return results;
 };
 
-export const getRepoInfo = async ({
-  entity,
-  repo,
-  accessToken,
-}) => {
+export const getRepoInfo = async ({ entity, repo, accessToken }) => {
   try {
     return got(`${GITHUB_API_V3_URL}/repos/${entity}/${repo}}`, {
       headers: {

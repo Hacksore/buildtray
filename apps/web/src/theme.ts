@@ -75,7 +75,6 @@ let lightTheme = createTheme({
       main: "#747474",
       contrastText: "#fff",
     },
-
   },
 });
 

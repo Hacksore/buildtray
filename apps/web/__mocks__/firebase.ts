@@ -90,4 +90,3 @@ export default new FirebaseService();
 export function firebaseDecorator(story: any, { parameters }: { parameters: any }) {
   return story();
 }
-

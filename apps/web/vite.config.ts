@@ -11,13 +11,13 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:5001/buildtray/us-central1/server",
         changeOrigin: true,
-        cookieDomainRewrite: "http://localhost:5001"
+        cookieDomainRewrite: "http://localhost:5001",
       },
     },
   },
   resolve: {
     alias: {
-      "service": path.resolve(__dirname, "src/service"),
+      service: path.resolve(__dirname, "src/service"),
     },
   },
 });

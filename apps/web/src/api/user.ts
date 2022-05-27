@@ -60,7 +60,7 @@ export const initialSignin = ({
 }: {
   githubToken: string;
   firebaseToken: string;
-}): Promise<any> => {
+}): Promise<unknown> => {
   return _request("/login", {
     method: "POST",
     headers: {

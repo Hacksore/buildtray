@@ -91,7 +91,9 @@ export default function Header() {
       <AppBar elevation={0} position="fixed">
         <Toolbar>
           <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
-            <Link style={{ textDecoration: "none", color: "#fff" }} to="/">Buildtray</Link>
+            <Link style={{ textDecoration: "none", color: "#fff" }} to="/">
+              Buildtray
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>

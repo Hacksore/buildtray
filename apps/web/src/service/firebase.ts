@@ -32,13 +32,13 @@ class FirebaseService extends EventEmitter {
 
     const time = Math.floor(+new Date() / 1000);
     const updatedRepo = query(localRef, orderByChild("createdAt"), startAfter(time), limitToLast(1));
-    
+
     // find by run id
     // TODO: might be useful later on
     // const findBuildBuildId = query(localRef, orderByChild("id"), equalTo(2223461950), limitToLast(1));
 
     // when a build is added, emit the build
-    const onChildAddedListener = onChildAdded(updatedRepo, (snapshot: DataSnapshot) => {  
+    const onChildAddedListener = onChildAdded(updatedRepo, (snapshot: DataSnapshot) => {
       this.emit("build", {
         ...snapshot.val(),
         fullName,
@@ -63,7 +63,7 @@ class FirebaseService extends EventEmitter {
    * @returns Promise<any[]>
    */
   getMostRecentBuilds(fullName: string): Promise<IBuildInfo[]> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const buildPath = `repos/${encodeRepo(fullName)}/builds`;
       const localRef = ref(database, buildPath);
       const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(5));
@@ -87,9 +87,10 @@ class FirebaseService extends EventEmitter {
   }
 
   clearAllListeners(): void {
-    for (const l of this._l) { 
-      console.log("remove listener", l);
-    }
+    // TODO: implement?
+    // for (const l of this._l) {
+    //   console.log("remove listener", l);
+    // }
   }
 }
 

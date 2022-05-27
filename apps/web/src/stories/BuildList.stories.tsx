@@ -42,5 +42,5 @@ Basic.parameters = {
   },
   firebase: {
     getMostRecentBuilds: () => [],
-  }
+  },
 };

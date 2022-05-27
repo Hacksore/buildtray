@@ -100,7 +100,7 @@ router.get("/repos/all", async (req: any, res) => {
   }
 
   console.log("get all repos");
-  
+
   res.json(repos);
 });
 

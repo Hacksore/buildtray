@@ -1,10 +1,10 @@
-import { initialize, mswDecorator } from 'msw-storybook-addon';
+import { initialize, mswDecorator } from "msw-storybook-addon";
 
 initialize({
-  onUnhandledRequest: 'bypass'
-})
+  onUnhandledRequest: "bypass",
+});
 
-import { firebaseDecorator } from '../__mocks__/firebase';
+import { firebaseDecorator } from "../__mocks__/firebase";
 
 export const decorators = [mswDecorator, firebaseDecorator];
 

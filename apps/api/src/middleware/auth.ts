@@ -6,7 +6,6 @@ import admin from "firebase-admin";
 const auth = admin.auth();
 // auth middleware to decode the JWT and validte it
 export const authenticate = async (req: Request, res, next) => {
-
   // this is the config we setup to use to validate the github webhook payload
   const secret = config.github.webhook.secret;
   const secureHeader = req.headers["x-hub-signature-256"];
@@ -38,5 +37,4 @@ export const authenticate = async (req: Request, res, next) => {
     res.status(401).send("Invalid session");
     return;
   }
-
 };

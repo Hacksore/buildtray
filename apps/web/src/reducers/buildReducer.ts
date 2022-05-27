@@ -5,9 +5,7 @@ export interface BuildState {
   builds: IBuildInfo[];
 }
 
-const initialState: BuildState[] = [
-  
-];
+const initialState: BuildState[] = [];
 
 export const buildSlice = createSlice({
   name: "builds",
@@ -21,7 +19,7 @@ export const buildSlice = createSlice({
       if (index !== -1) {
         state[index] = action.payload;
       }
-    }
+    },
   },
 });
 

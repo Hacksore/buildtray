@@ -39,15 +39,14 @@ app.whenReady().then(() => {
 
   tray.setToolTip("Buildtray");
   tray.addListener("click", () => {
-
     // show it
     trayWin?.show();
 
     // move it to the menubar position
     const { x, y } = tray.getBounds();
     const bounds = trayWin?.getBounds();
-    
-    if (bounds) { 
+
+    if (bounds) {
       trayWin?.setPosition(x, y - bounds.height);
     }
   });
@@ -64,6 +63,5 @@ app.whenReady().then(() => {
     // change icon color based on status payload
     const path = `${APP_BASE_PATH}/image/icon-${status}.png`;
     tray.setImage(path);
-  }); 
-
+  });
 });
