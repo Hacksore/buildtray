@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "start": "concurrently npm:dev npm:emulator",
-    "emulator": "firebase emulators:start",
+    "emulator": "firebase emulators:start --import apps/api/seed",
     "dev": "turbo run start --scope='web'",
     "lint": "turbo run lint",
     "deploy": "turbo run build --parallel && turbo run deploy --parallel",

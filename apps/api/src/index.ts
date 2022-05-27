@@ -28,11 +28,6 @@ declare module "express" {
   }
 }
 
-app.use((req, res, next) => {
-  functions.logger.log(req.path);
-  next();
-});
-
 app.use(morgan("combined"));
 
 app.use(
@@ -58,6 +53,6 @@ router.use(repoRoute);
 router.use(webhookRoute);
 router.use(userRoute);
 
-app.use("/v1", router);
+app.use("/api/v1", router);
 
 export const server = functions.https.onRequest(app);

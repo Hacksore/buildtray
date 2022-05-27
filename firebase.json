@@ -2,9 +2,19 @@
   "functions": {
     "source": "apps/api"
   },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "public": "apps/web/dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "/api/**",
@@ -26,9 +36,15 @@
     "database": {
       "port": 9000
     },
+    "firestore": {
+      "port": 5002
+    },
     "hosting": {
       "enabled": true,
       "port": "8080"
+    },
+    "auth": {
+      "port": 9099
     }
   }
 }

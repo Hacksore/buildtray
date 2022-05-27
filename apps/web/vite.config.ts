@@ -9,7 +9,7 @@ export default defineConfig({
     open: "http://localhost:3000",
     proxy: {
       "/api": {
-        target: "http://localhost:5001/buildtray/us-central1",
+        target: "http://localhost:5001/buildtray/us-central1/server",
         changeOrigin: true,
         cookieDomainRewrite: "http://localhost:5001"
       },
