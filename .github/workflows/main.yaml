@@ -23,6 +23,4 @@ jobs:
       - name: Install
         run: npm ci
       - name: Deploy API
-        run: npm run deploy:api
-      - name: Deploy Web
-        run: npm run deploy:web
+        run: npm run deploy
