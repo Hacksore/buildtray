@@ -3,7 +3,7 @@ import { BuildsList } from "../components/BuildsList";
 
 export const Tray = () => {
   return (
-    <Box>
+    <Box sx={{ mt: 10 }}>
       <BuildsList />
     </Box>
   );

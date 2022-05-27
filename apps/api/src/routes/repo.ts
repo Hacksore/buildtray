@@ -20,13 +20,13 @@ router.delete("/repo/subscribe", async (req: any, res) => {
   }
 
   const id = req.session.github.user.id;
-  const path = `users/${id}/subscriptions/${fullName}`;
-  await db.ref(path).set(null);
 
+  // udpate the user subscriptions
+  await db.ref(`users/${id}/subscriptions/${fullName}`).set(null);
   // update the repo data as well
   await db.ref(`users/${id}/repos/${fullName}/subscribed`).set(false);
 
-  res.send({ message: `Unsubbed from ${path}` });
+  res.send({ message: `Unsubscribed from notifications on ${fullName}` });
 });
 
 /**
@@ -49,7 +49,7 @@ router.post("/repo/subscribe", async (req: any, res) => {
 
   console.log("sub to repo");
 
-  res.send({ message: `Enabled notifications to ${fullName}` });
+  res.send({ message: `Subscribed to notifications on ${fullName}` });
 });
 
 /**

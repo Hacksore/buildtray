@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from "react-query";
-import { queryClient } from "../main";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getAllUserRepos } from "../api/user";
 import { Button, darken, styled, Typography } from "@mui/material";
 import { Box } from "@mui/system";
@@ -28,8 +27,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 function Dashboard() {
+  const queryClient = useQueryClient();
   const searchTerm = useSelector((state: any) => state.main.repoFilterText);
-  
+
   // @ts-ignore
   const subMutation: any = useMutation((data: any) => {
     if (data.type === "sub") {
@@ -48,7 +48,7 @@ function Dashboard() {
     return <h2>loading....</h2>;
   }
 
-  const handleRepoSuscribe = (repo: IRepo) => {
+  const handleRepoSubscribe = (repo: IRepo) => {
     const [entity, name] = repo.fullName.split("/");
 
     subMutation.mutate(
@@ -59,7 +59,14 @@ function Dashboard() {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries("allRepos");
+          const updatedList = allUserRepos.map(r => {
+            if (r.fullName === repo.fullName) {
+              r.subscribed = !r.subscribed;
+            }
+
+            return r;
+          });
+          queryClient.setQueryData("allRepos", updatedList);
         },
       }
     );
@@ -75,7 +82,7 @@ function Dashboard() {
       <RepoFilter />
 
       {allUserRepos
-        .sort((a: IRepo) => a.subscribed || a.installed ? -1 : 1)
+        .sort((a: IRepo) => (a.subscribed || a.installed ? -1 : 1))
         .filter((item: IRepo) => item.fullName.includes(searchTerm))
         .map((repo: IRepo) => {
           return (
@@ -85,7 +92,7 @@ function Dashboard() {
                 disabled={!repo.installed}
                 size="small"
                 variant="contained"
-                onClick={() => handleRepoSuscribe(repo)}
+                onClick={() => handleRepoSubscribe(repo)}
               >
                 {repo.subscribed ? "Unsubscribe" : "Subscribe"}
               </Button>

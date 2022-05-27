@@ -1,4 +1,4 @@
-import { lighten, styled } from "@mui/material";
+import { darken, lighten, styled } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -14,10 +14,10 @@ const { addBuild, updateBuild } = buildSlice.actions;
 
 const StyledBox = styled(Box)(({ theme }) => ({
   "& .wrapper": {
-    background: "#000",
-    color: "#fff",
   },
   "& .build": {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
     cursor: "pointer",
     fontWeight: 500,
     display: "flex",
@@ -25,9 +25,9 @@ const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
     margin: theme.spacing(1),
     borderRadius: 6,
-    background: "#161B22",
+    background: theme.palette.background.default,
     "&:hover": {
-      background: lighten("#1B1F23", 0.2),
+      background: darken(theme.palette.background.default, 0.05),
     },
   },
   "& .title": {
@@ -54,10 +54,15 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 
+const handleElectronLaunch = (event: any) => {
+  // TODO: todo fix in electron
+  // () => window.electron.openInBrowser(url)
+};
+
 const ListItem = ({ fullName, status, commit, createdAt, url }: IBuildInfo) => {
   const timeAgo = moment.unix(createdAt).fromNow();
   return (
-    <Box onClick={() => window.electron.openInBrowser(url)} className="build">
+    <a onClick={handleElectronLaunch} href={url} className="build">
       <Box className="title">
         <Box className={clsx("status-icon", { [status]: true })} />
         <Typography>{fullName}</Typography>
@@ -70,7 +75,7 @@ const ListItem = ({ fullName, status, commit, createdAt, url }: IBuildInfo) => {
           {timeAgo}
         </Typography>
       </Box>
-    </Box>
+    </a>
   );
 };
 
