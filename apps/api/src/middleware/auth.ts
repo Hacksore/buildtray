@@ -22,19 +22,20 @@ export const authenticate = async (req: Request, res, next) => {
 
   const jwtToken = req?.session?.firebase?.token;
   if (!jwtToken) {
-    res.status(401).send("A valid token was not found on the sesssion");
+    res.status(401).send({ error: "A valid token was not found on the session" });
     return;
   }
 
   try {
     const decodedIdToken = await auth.verifyIdToken(jwtToken);
+    const [id] = decodedIdToken.firebase.identities["github.com"];
     req.session.github.token = decodedIdToken.toString();
-    req.session.github.user.id = decodedIdToken.firebase.identities["github.com"][0];
+    req.session.github.user.id = id;
 
     return next();
   } catch (e) {
     console.log(e);
-    res.status(401).send("Invalid session");
+    res.status(401).send({ error: e.message });
     return;
   }
 };

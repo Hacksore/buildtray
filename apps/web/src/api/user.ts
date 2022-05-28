@@ -79,9 +79,11 @@ export const _request = async (path: string, options: RequestInit = {}) => {
   };
 
   try {
-    const repsonse = fetch("/api/v1" + path, mergedOptions).then(res => res.json());
-    return repsonse;
+    const response = fetch("/api/v1" + path, mergedOptions).then(res => res.json());
+    return response;
   } catch (err) {
+    console.log("err", err);
+
     return Promise.reject("Error");
   }
 };

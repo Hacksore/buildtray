@@ -5,7 +5,6 @@
       "bluelinky": { "metadata": { "fullName": "Hacksore/bluelinky", "private": false } },
       "buildtray": { "metadata": { "fullName": "Hacksore/buildtray", "private": false } },
       "overlayed": { "metadata": { "fullName": "Hacksore/overlayed", "private": false } },
-      "youcog": { "metadata": { "fullName": "Hacksore/youcog", "private": false } },
       "test": { "metadata": { "fullName": "Hacksore/test", "private": false } }
     }
   },
