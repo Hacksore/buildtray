@@ -22,5 +22,7 @@ jobs:
           node-version: "${{ env.NODE_VERSION }}"
       - name: Install
         run: npm ci
-      - name: Deploy API
+      - name: Build projects
+        run: npm run build
+      - name: Deploy to firebase
         run: npm run deploy

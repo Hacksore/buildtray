@@ -1,4 +1,5 @@
 import express from "express";
+import IRepo from "shared/types/IRepo";
 import { encodeRepo, isValidRepo, safeName } from "shared/utils/naming";
 import { db } from "../firebase";
 
@@ -101,7 +102,7 @@ router.get("/repos/all", async (req: any, res) => {
 
   console.log("get all repos");
 
-  res.json(repos);
+  res.json(repos.sort((a: IRepo) => (a.installed ? -1 : 1)));
 });
 
 export default router;

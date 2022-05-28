@@ -26,6 +26,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
       background: darken(theme.palette.background.default, 0.03),
     },
   },
+  "& .link": {
+    color: theme.palette.primary.main,
+    fontWeight: "bold",
+  },
 }));
 
 function Dashboard() {
@@ -33,7 +37,7 @@ function Dashboard() {
   const searchTerm = useSelector((state: any) => state.main.repoFilterText);
 
   // @ts-ignore
-  const subMutation: any = useMutation((data: any) => {
+  const subMutation: any = useMutation((data: IRepo & { type: string }) => {
     if (data.type === "sub") {
       subscribeToRepo(data);
     } else {
@@ -61,12 +65,12 @@ function Dashboard() {
       },
       {
         onSuccess: () => {
-          const updatedList = allUserRepos.map(r => {
-            if (r.fullName === repo.fullName) {
-              r.subscribed = !r.subscribed;
+          const updatedList = allUserRepos.map((tempRepo: IRepo) => {
+            if (tempRepo.fullName === repo.fullName) {
+              tempRepo.subscribed = !tempRepo.subscribed;
             }
 
-            return r;
+            return tempRepo;
           });
           queryClient.setQueryData("allRepos", updatedList);
         },
@@ -76,23 +80,17 @@ function Dashboard() {
 
   return (
     <StyledBox sx={{ display: "flex", flexDirection: "column", p: 3 }}>
-      <Typography variant="subtitle1">
-        This page displays all the repos you have granted Buildtray access to. You can update repos we have acces to at
-        anytime on the settings page.
-      </Typography>
-      <Box>
-        <Button
-          target="_blank"
-          href={import.meta.env.VITE_BUILDTRAY_APP_URL}
-        >
-          <Typography>Install app to your github account</Typography>
-        </Button>
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Typography sx={{ mr: 1 }} variant="subtitle1">
+          Missing a repository?
+        </Typography>
+        <a className="link" target="_blank" href={import.meta.env.VITE_BUILDTRAY_APP_URL}>
+          <Typography>Adjust GitHub App Permissions →</Typography>
+        </a>
       </Box>
-
       <RepoFilter />
 
       {allUserRepos
-        .sort((a: IRepo) => (a.subscribed || a.installed ? -1 : 1))
         .filter((item: IRepo) => item.fullName.includes(searchTerm))
         .map((repo: IRepo) => {
           return (

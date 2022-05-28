@@ -53,7 +53,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const handleElectronLaunch = (event: any, url: string) => {
+const handleElectronLaunch = (event: React.MouseEvent, url: string) => {
   if (window.electron !== undefined) {
     event.preventDefault();
     window.electron.openInBrowser(url);
@@ -71,7 +71,7 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
       </Box>
       <Box sx={{ display: "flex" }} className="desc">
         <Typography sx={{ mr: 1, flex: 3 }}>
-          {commit.author} - {commit.message}
+          {commit.author} - {commit.message.split("\n")[0]}
         </Typography>
         <Typography sx={{ mr: 1 }}>{timeAgo}</Typography>
       </Box>
@@ -114,7 +114,7 @@ export const BuildsList = () => {
       }
 
       // spawn notification
-      new Notification(build.fullName, { body: build.commit.message, icon: "/icon.svg" });
+      new Notification(build.fullName, { body: build.commit.message, icon: "/logo.svg" });
 
       // inform electron of latest build status
       window.electron.send("toMain", {

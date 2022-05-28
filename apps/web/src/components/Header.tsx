@@ -128,7 +128,7 @@ export default function Header() {
         <Toolbar disableGutters classes={{ root: "toolbar" }} >
           <Typography variant="h6" noWrap component="div">
             <Link className="header-link" to="/">
-              <img className="header-logo" src="/icon.svg" alt="logo" />
+              <img className="header-logo" src="/logo.svg" alt="logo" />
               Buildtray
             </Link>
           </Typography>
