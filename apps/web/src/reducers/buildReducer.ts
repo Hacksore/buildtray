@@ -1,11 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import IBuildInfo from "shared/types/IBuildInfo";
 
-export interface BuildState {
-  builds: IBuildInfo[];
-}
-
-const initialState: BuildState[] = [];
+type BuildState = Array<IBuildInfo>;
+const initialState: BuildState = [];
 
 export const buildSlice = createSlice({
   name: "builds",
@@ -17,8 +14,12 @@ export const buildSlice = createSlice({
     updateBuild(state, action: PayloadAction<IBuildInfo>) {
       const index = state.findIndex((b: IBuildInfo) => b.id === action.payload.id);
       if (index !== -1) {
-        state[index] = action.payload;
+        state[index].status = action.payload.status;
+        state[index].conclusion = action.payload.conclusion;
       }
+    },
+    clearBuilds: () => {
+      return initialState;
     },
   },
 });

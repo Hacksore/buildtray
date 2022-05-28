@@ -11,10 +11,31 @@ function a11yProps(index: number) {
   };
 }
 
-const tabIndexFromPath: any = {
-  "/dashboard": 0,
-  "/dashboard/settings": 1,
-  "/dashboard/browse": 2,
+interface ITabItem {
+  index: number;
+  name: string;
+}
+interface ITabRecord {
+  [name: string]: ITabItem;
+}
+
+const tabList: ITabRecord = {
+  "/dashboard": {
+    index: 0,
+    name: "Repositories",
+  },
+  // "/dashboard/settings": {
+  //   index: 1,
+  //   name: "Settings",
+  // },
+  // "/dashboard/browse": {
+  //   index: 2,
+  //   name: "Browse",
+  // },
+  "/tray": {
+    index: 1,
+    name: "Builds",
+  },
 };
 
 const StyledLink = styled(Link)(() => ({
@@ -33,16 +54,12 @@ export default function TabBar() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tabIndexFromPath[path]} aria-label="dashboard tabs">
-          <StyledLink to="/dashboard">
-            <StyledTab label="Repositories" {...a11yProps(0)} />
-          </StyledLink>
-          <StyledLink to="/dashboard/settings">
-            <StyledTab label="Settings" {...a11yProps(1)} />
-          </StyledLink>
-          <StyledLink to="/dashboard/browse">
-            <StyledTab label="Browse" {...a11yProps(2)} />
-          </StyledLink>
+        <Tabs value={tabList[path].index} aria-label="dashboard tabs">
+          {Object.entries(tabList).map(([path, item]: [string, ITabItem]) => (
+            <StyledLink to={path}>
+              <StyledTab label={item.name} {...a11yProps(0)} />
+            </StyledLink>
+          ))}
         </Tabs>
       </Box>
     </Box>

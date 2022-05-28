@@ -19,7 +19,7 @@ declare interface FirebaseService {
 }
 
 class FirebaseService extends EventEmitter {
-  public _l: unknown[] = [];
+  public listeners: any = [];
 
   /**
    * Subscribe to something like repos/<entity>/<repo>
@@ -53,8 +53,8 @@ class FirebaseService extends EventEmitter {
       });
     });
 
-    this._l.push(onChildAddedListener);
-    this._l.push(onChildChangedListener);
+    this.listeners.push(onChildAddedListener);
+    this.listeners.push(onChildChangedListener);
   }
 
   /**
@@ -68,7 +68,7 @@ class FirebaseService extends EventEmitter {
       const localRef = ref(database, buildPath);
       const updatedRepo = query(localRef, orderByChild("createdAt"), limitToLast(5));
 
-      onValue(updatedRepo, (snapshot: DataSnapshot) => {
+      const listener = onValue(updatedRepo, (snapshot: DataSnapshot) => {
         const val = snapshot.val();
 
         if (!val) {
@@ -83,14 +83,17 @@ class FirebaseService extends EventEmitter {
 
         resolve(fixed.reverse() as IBuildInfo[]);
       });
+
+      this.listeners.push(listener);
     });
   }
 
   clearAllListeners(): void {
-    // TODO: implement?
-    // for (const l of this._l) {
-    //   console.log("remove listener", l);
-    // }
+    for (const listener of this.listeners) {
+      listener();
+    }
+    // reset all listers list
+    this.listeners = [];
   }
 }
 

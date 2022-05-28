@@ -1,26 +1,26 @@
 /**
- * Replace all occurrences of url characters that can be encoded with their spective url encoding, inlcuding period as well
- * @param string a string to santize
- * @returns a string santized string
+ * Replace all occurrences of url characters that can be encoded with their respective url encoding, including period as well
+ * @param string a string to sanitized
+ * @returns a string sanitized string
  */
 export const safeName = (string: string) => {
-  return encodeURIComponent(string.toLocaleLowerCase()).replace(/\./g, "%2e");
+  return encodeURIComponent(string).replace(/\./g, "%2e");
 };
 
 /**
- * Replace all occurrences characters that are url encoded with their normal values, inlcuding %2e
- * @param string a string to desantize
- * @returns a desantized string
+ * Replace all occurrences characters that are url encoded with their normal values, including %2e
+ * @param string a string to desanitized
+ * @returns a desanitized string
  */
 export const unsafeName = (string: string) => {
-  return decodeURIComponent(string.toLocaleLowerCase()).replace(/%2e/g, ".");
+  return decodeURIComponent(string).replace(/%2e/g, ".");
 };
 
 /**
- * URL encodes a repo name into a ent/repo format to keep firendly to the database
- * Firebase prohibits these chareters as keys: $ # [ ] /
- * @param fullName Complete repo name - ex: hacksore.com/my-repo
- * @returns String - ex: hacksore%2fcom%/my-repo
+ * URL encodes a repo name into a ent/repo format to keep friendly to the database
+ * Firebase prohibits these characters as keys: $ # [ ] /
+ * @param fullName Complete repo name - ex: hacksore/hacksore.com
+ * @returns String - ex: hacksore%2fhacksore%2ecom
  */
 export const encodeRepo = (fullName: string) => {
   const [owner, repo] = entityAndRepo(fullName);

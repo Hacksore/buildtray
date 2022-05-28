@@ -5,7 +5,7 @@ import Auth from "./containers/Auth";
 import Dashboard from "./containers/Dashboard";
 import Home from "./containers/Home";
 import SignIn from "./containers/SignIn";
-import { Tray } from "./containers/Tray";
+import Tray from "./containers/Tray";
 
 export default function App() {
   return (

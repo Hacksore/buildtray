@@ -29,7 +29,9 @@ export default function Home() {
         <Grid item xs={3}>
           <Box sx={{ mb: 4 }}>
             <Typography variant="h4">Welcome to Buildtray 👋</Typography>
-            <Typography variant="subtitle2">Buildtray allows you to subscribe to your github repo action status</Typography>
+            <Typography variant="subtitle2">
+              Buildtray allows you to subscribe to your github repo action status
+            </Typography>
           </Box>
           {user ? (
             <Link className="button" to="/dashboard">

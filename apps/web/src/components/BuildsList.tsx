@@ -114,7 +114,20 @@ export const BuildsList = () => {
       }
 
       // spawn notification
-      new Notification(build.fullName, { body: build.commit.message, icon: "/logo.svg" });
+      let statusIcon = "⏳";
+      let statusText = "started";
+      if (build.conclusion === "success") {
+        statusIcon = "✅";
+        statusText = "completed";
+      }
+      if (build.conclusion === "failure") {
+        statusIcon = "🛑";
+        statusText = "failed";
+      }
+
+      const title = `${statusIcon} ${build.fullName} build ${statusText}`;
+      const body = `@${build.user.sender} - ${build.commit.message}`;
+      new Notification(title, { body, icon: "/logo.svg" });
 
       // inform electron of latest build status
       window.electron.send("toMain", {

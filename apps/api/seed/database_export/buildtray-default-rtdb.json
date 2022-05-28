@@ -1,27 +1,23 @@
 {
   "repos": {
-    "hacksore": {
+    "Hacksore": {
+      "Hacksore": { "metadata": { "fullName": "Hacksore/Hacksore", "private": false } },
       "bluelinky": { "metadata": { "fullName": "Hacksore/bluelinky", "private": false } },
       "buildtray": { "metadata": { "fullName": "Hacksore/buildtray", "private": false } },
       "overlayed": { "metadata": { "fullName": "Hacksore/overlayed", "private": false } },
+      "youcog": { "metadata": { "fullName": "Hacksore/youcog", "private": false } },
       "test": { "metadata": { "fullName": "Hacksore/test", "private": false } }
     }
   },
   "users": {
     "996134": {
       "repos": {
-        "hacksore": {
+        "Hacksore": {
+          "Hacksore": { "subscribed": false },
           "bluelinky": { "subscribed": false },
-          "test": { "subscribed": false },
-          "bofa": { "subscribed": false },
-          "botsore": { "subscribed": false },
-          "bt-hid-proxy": { "subscribed": false },
           "buildtray": { "subscribed": false },
-          "dewaifu": { "subscribed": false },
-          "docker-bluelinky": { "subscribed": false },
-          "docker-openfin": { "subscribed": false },
-          "hacksore": { "subscribed": false },
-          "hacksore%2ecom": { "subscribed": false },
+          "overlayed": { "subscribed": false },
+          "test": { "subscribed": false },
           "youcog": { "subscribed": false }
         }
       }

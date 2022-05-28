@@ -102,7 +102,11 @@ router.get("/repos/all", async (req: any, res) => {
 
   console.log("get all repos");
 
-  res.json(repos.sort((a: IRepo) => (a.installed ? -1 : 1)));
+  const stortedResposne = repos
+    .sort((a: IRepo, b: IRepo) => b.fullName.localeCompare(a.fullName))
+    .sort((a: IRepo) => (a.installed ? -1 : 1));
+
+  res.json(stortedResposne);
 });
 
 export default router;

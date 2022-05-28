@@ -91,7 +91,7 @@ function Dashboard() {
       <RepoFilter />
 
       {allUserRepos
-        .filter((item: IRepo) => item.fullName.includes(searchTerm))
+        .filter((item: IRepo) => item.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
         .map((repo: IRepo) => {
           return (
             <Box key={repo.fullName} className="item">

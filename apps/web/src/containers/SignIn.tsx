@@ -61,9 +61,7 @@ export default function SignIn() {
         pt: 10,
       }}
     >
-      <Typography>
-        Please wait while we log you in
-      </Typography>
+      <Typography>Please wait while we log you in</Typography>
       <CircularProgress />
     </Box>
   );

@@ -27,6 +27,7 @@ export const addBuildEntry = item => {
   const fullName = encodeRepo(item.repository.full_name);
   const id = item.workflow_run.id;
   db.ref(`repos/${fullName}/builds/${id}`).set({
+    id,
     createdAt: Math.floor(+new Date() / 1000),
     status: item.workflow_run.status,
     conclusion: item.workflow_run.conclusion,
