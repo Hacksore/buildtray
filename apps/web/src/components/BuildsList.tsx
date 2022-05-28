@@ -113,6 +113,9 @@ export const BuildsList = () => {
         dispatch(updateBuild(build));
       }
 
+      // spawn notification
+      new Notification(build.fullName, { body: build.commit.message, icon: "/icon.svg" });
+
       // inform electron of latest build status
       window.electron.send("toMain", {
         status: build.status,

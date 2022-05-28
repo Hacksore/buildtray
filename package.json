@@ -12,6 +12,7 @@
     "dev": "turbo run start --scope='web' --scope='api'",
     "lint": "turbo run lint",
     "deploy": "turbo run build --parallel && turbo run deploy --parallel",
+    "storybook": "turbo run storybook",
     "tunnel": "cloudflared tunnel --url http://localhost:5001 run buildtray",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "export": "npm run export -w api"

@@ -10,6 +10,33 @@ import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../main";
 import { Link } from "react-router-dom";
+import { styled } from "@mui/material";
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  // "& .header": {
+  //   height: 40,
+  // },
+  // "& .toolbar": {
+  //   height: 40,
+  // },
+  "& .header-link": {
+    display: "flex",
+    textDecoration: "none",
+    fontWeight: "bold",
+    marginLeft: theme.spacing(2),
+    color: theme.palette.primary.contrastText,
+  },
+  "& .header-logo": {
+    marginRight: 6,
+    width: 28,
+    height: 28,
+  },
+  "& .menu-link": {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+  },
+}));
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -40,6 +67,7 @@ export default function Header() {
         vertical: "top",
         horizontal: "right",
       }}
+      disablePortal
       id={menuId}
       keepMounted
       transformOrigin={{
@@ -49,8 +77,16 @@ export default function Header() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link className="menu-link" to="/dashboard">
+          Dashboard
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link className="menu-link" to="/tray">
+          Tray
+        </Link>
+      </MenuItem>
     </Menu>
   );
 
@@ -87,16 +123,17 @@ export default function Header() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar elevation={0} position="fixed">
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
-            <Link style={{ textDecoration: "none", color: "#fff" }} to="/">
+    <StyledBox>
+      <AppBar elevation={0} className="header" classes={{ root: "header" }} position="fixed">
+        <Toolbar disableGutters classes={{ root: "toolbar" }} >
+          <Typography variant="h6" noWrap component="div">
+            <Link className="header-link" to="/">
+              <img className="header-logo" src="/icon.svg" alt="logo" />
               Buildtray
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -116,6 +153,6 @@ export default function Header() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </StyledBox>
   );
 }

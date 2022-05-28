@@ -31,26 +31,7 @@ let darkTheme = createTheme({
 
 // overrides with access to the theme here
 darkTheme = createTheme(darkTheme, {
-  components: {
-    MuiTooltip: {
-      styleOverrides: {
-        arrow: {
-          color: darkTheme.palette.background.default,
-          "&::before": {
-            // apply to the border of the arrow
-            border: "1px solid #3a3a3a",
-            backgroundColor: darken(darkTheme.palette.background.default, 0.2),
-            boxSizing: "border-box",
-          },
-        },
-        tooltip: {
-          backgroundColor: darken(darkTheme.palette.background.default, 0.2),
-          border: "1px solid #3a3a3a",
-          fontSize: 20,
-        },
-      },
-    },
-  },
+  components: {},
 });
 
 let lightTheme = createTheme({
@@ -80,26 +61,7 @@ let lightTheme = createTheme({
 
 // overrides with access to the theme here
 lightTheme = createTheme(lightTheme, {
-  components: {
-    MuiTooltip: {
-      styleOverrides: {
-        arrow: {
-          color: lightTheme.palette.background.default,
-          "&::before": {
-            // apply to the border of the arrow
-            border: "1px solid #3a3a3a",
-            backgroundColor: darken(lightTheme.palette.background.default, 0.2),
-            boxSizing: "border-box",
-          },
-        },
-        tooltip: {
-          backgroundColor: darken(lightTheme.palette.background.default, 0.2),
-          border: "1px solid #3a3a3a",
-          fontSize: 20,
-        },
-      },
-    },
-  },
+  components: {},
 });
 
 export { lightTheme, darkTheme };

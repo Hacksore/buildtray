@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getAllUserRepos } from "../api/user";
-import { Button, darken, styled, Typography } from "@mui/material";
+import { Button, darken, styled, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { subscribeToRepo, unsubscribeFromRepo } from "../api/user";
 import IRepo from "shared/types/IRepo";
@@ -9,6 +9,8 @@ import { useLocation } from "react-router-dom";
 import { unsafeName } from "shared/utils/naming";
 import { RepoFilter } from "../components/RepoFilter";
 import { useSelector } from "react-redux";
+import SubscribeIcon from "@mui/icons-material/NotificationsNone";
+import UnsubscribeIcon from "@mui/icons-material/Notifications";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   "& .item": {
@@ -21,7 +23,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexDirection: "row",
     alignItems: "center",
     "&:hover": {
-      background: darken(theme.palette.background.default, 0.05),
+      background: darken(theme.palette.background.default, 0.03),
     },
   },
 }));
@@ -102,7 +104,9 @@ function Dashboard() {
                 variant="contained"
                 onClick={() => handleRepoSubscribe(repo)}
               >
-                {repo.subscribed ? "Unsubscribe" : "Subscribe"}
+                <Tooltip title={repo.subscribed ? "Unsubscribe" : "Subscribe"}>
+                  {repo.subscribed ? <UnsubscribeIcon /> : <SubscribeIcon />}
+                </Tooltip>
               </Button>
             </Box>
           );
