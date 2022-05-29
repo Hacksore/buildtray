@@ -1,0 +1,5 @@
+export enum AUTH_STATE {
+  AUTHED = "AUTHED",
+  DEAUTHED = "DEAUTHED",
+  LOADING = "LOADING",
+}

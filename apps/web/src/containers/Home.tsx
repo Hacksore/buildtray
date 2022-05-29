@@ -1,7 +1,9 @@
-import { Box, Button, Grid, styled, Typography } from "@mui/material";
+import { Box, Button, Grid, Skeleton, styled, Typography } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../hooks/redux";
 import { auth } from "../main";
+import { AUTH_STATE } from "../types/loadingStates";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -15,7 +17,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function Home() {
-  const [user] = useAuthState(auth);
+  const authState = useAppSelector(state => state.main.authState);
+
+  const buttonActionText = authState === AUTH_STATE.AUTHED ? "Go to Dashboard" : "Sign in with Github";
+  const buttonRoute = authState === AUTH_STATE.AUTHED ? "/dashboard" : "/login";
   return (
     <StyledBox>
       <Grid
@@ -33,13 +38,13 @@ export default function Home() {
               Buildtray allows you to subscribe to your github repo action status
             </Typography>
           </Box>
-          {user ? (
-            <Link className="button" to="/dashboard">
-              <Button variant="contained">Go to Dashboard</Button>
-            </Link>
+          {authState === AUTH_STATE.LOADING ? (
+            <Skeleton width={188} height={58} />
           ) : (
-            <Link className="button" to="/login">
-              <Button variant="contained">Sign in with Github</Button>
+            <Link className="button" to={buttonRoute}>
+              <Button variant="contained" style={{ textTransform: "none" }}>
+                {buttonActionText}
+              </Button>
             </Link>
           )}
         </Grid>

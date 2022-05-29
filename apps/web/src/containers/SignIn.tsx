@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { GithubAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import {
+  GithubAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { initialSignin } from "../api/user";
 import { auth } from "../main";
@@ -14,17 +20,12 @@ export default function SignIn() {
   };
 
   const handleAuthFlow = async () => {
-    // connect to emulator on DEV
-    // TODO: stick in env/config?
-    // TODO: using local auth is nice but we can't test messing with the
-    // github api so that's kinda a problem for now
-    if (import.meta.env.DEV) {
-      // connectAuthEmulator(auth, "http://localhost:9099");
-    }
-
     try {
+      // enabled persistance
+      await setPersistence(auth, browserLocalPersistence);
+
       const result = await getRedirectResult(auth);
-      // we didnt get a result so we should sign in :)
+      // we did not get a result so we should sign in :)
       if (!result) {
         return signInWithGithub();
       }

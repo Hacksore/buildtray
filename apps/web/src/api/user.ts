@@ -1,3 +1,6 @@
+import { getAuth } from "firebase/auth";
+import { app } from "../main";
+
 /**
  * All the user repos that have been subbed
  * @returns
@@ -71,10 +74,13 @@ export const initialSignin = ({
 };
 
 export const _request = async (path: string, options: RequestInit = {}) => {
+  const auth = getAuth(app);
+  const accesstToken = await auth.currentUser?.getIdToken();
   const mergedOptions = {
     ...options,
     headers: {
       ...(options.headers || {}),
+      Authorization: `Bearer ${accesstToken}`,
     },
   };
 
@@ -82,8 +88,8 @@ export const _request = async (path: string, options: RequestInit = {}) => {
     const response = fetch("/api/v1" + path, mergedOptions).then(res => res.json());
     return response;
   } catch (err) {
-    console.log("err", err);
-
+    // eslint-disable-next-line no-console
+    console.error("err", err);
     return Promise.reject("Error");
   }
 };

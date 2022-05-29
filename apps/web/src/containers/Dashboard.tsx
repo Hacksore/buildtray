@@ -114,20 +114,9 @@ function Dashboard() {
 }
 
 export default () => {
-  const location = useLocation();
-  const path = location.pathname;
-  const pathToComponent = {
-    "/dashboard": Dashboard,
-    "/dashboard/settings": () => <h2>settings</h2>,
-    "/dashboard/browse": () => <h2>browse</h2>,
-  };
-
-  // @ts-ignore
-  const Component = pathToComponent[path];
-
   return (
     <DefaultLayout>
-      <Component />
+      <Dashboard />
     </DefaultLayout>
   );
 };

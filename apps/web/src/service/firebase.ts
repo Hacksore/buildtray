@@ -19,6 +19,7 @@ declare interface FirebaseService {
 }
 
 class FirebaseService extends EventEmitter {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public listeners: any = [];
 
   /**

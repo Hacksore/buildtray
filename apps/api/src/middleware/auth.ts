@@ -20,9 +20,10 @@ export const authenticate = async (req: Request, res, next) => {
     }
   }
 
-  const jwtToken = req?.session?.firebase?.token;
+  // const jwtToken = req?.session?.firebase?.token;
+  const jwtToken = req.get("authorization").split(" ")[1];
   if (!jwtToken) {
-    res.status(401).send({ error: "A valid token was not found on the session" });
+    res.status(401).send({ error: "You must supply a bearer token" });
     return;
   }
 

@@ -24,17 +24,17 @@ const tabList: ITabRecord = {
     index: 0,
     name: "Repositories",
   },
-  // "/dashboard/settings": {
-  //   index: 1,
-  //   name: "Settings",
-  // },
-  // "/dashboard/browse": {
-  //   index: 2,
-  //   name: "Browse",
-  // },
   "/tray": {
     index: 1,
     name: "Builds",
+  },
+  "/browse": {
+    index: 2,
+    name: "Browse",
+  },
+  "/settings": {
+    index: 3,
+    name: "Settings",
   },
 };
 
@@ -56,7 +56,7 @@ export default function TabBar() {
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tabList[path].index} aria-label="dashboard tabs">
           {Object.entries(tabList).map(([path, item]: [string, ITabItem]) => (
-            <StyledLink to={path}>
+            <StyledLink key={path} to={path}>
               <StyledTab label={item.name} {...a11yProps(0)} />
             </StyledLink>
           ))}
