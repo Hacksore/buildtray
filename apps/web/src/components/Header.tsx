@@ -27,7 +27,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 const UserButton = ({ state, user }: { state: AUTH_STATE; user: any }) => {
-  if (state === AUTH_STATE.AUTHED) {
+  if (state === AUTH_STATE.AUTHORIZED) {
     return (
       <Link className="header-link" to="/dashboard">
         <Button style={{ textTransform: "none" }} size="small" color="inherit">
@@ -40,7 +40,7 @@ const UserButton = ({ state, user }: { state: AUTH_STATE; user: any }) => {
     );
   }
 
-  if (state === AUTH_STATE.DEAUTHED) {
+  if (state === AUTH_STATE.UNAUTHORIZED) {
     return (
       <Link className="header-link" to="/login">
         <Button style={{ textTransform: "none" }} size="small" color="inherit">

@@ -31,7 +31,7 @@ const ProtectedRoute = ({ redirectPath = "/", children, skeleton }: ProtectedRou
     }
   }
 
-  if (authState === AUTH_STATE.DEAUTHED) {
+  if (authState === AUTH_STATE.UNAUTHORIZED) {
     return <Navigate to={redirectPath} replace />;
   }
 

@@ -22,9 +22,9 @@ export default function App() {
 
   const handleAuthStateChange = (user: User | null) => {
     if (user) {
-      dispatch(setAuthState(AUTH_STATE.AUTHED));
+      dispatch(setAuthState(AUTH_STATE.AUTHORIZED));
     } else {
-      dispatch(setAuthState(AUTH_STATE.DEAUTHED));
+      dispatch(setAuthState(AUTH_STATE.UNAUTHORIZED));
     }
   };
 

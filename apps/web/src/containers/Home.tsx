@@ -19,8 +19,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
 export default function Home() {
   const authState = useAppSelector(state => state.main.authState);
 
-  const buttonActionText = authState === AUTH_STATE.AUTHED ? "Go to Dashboard" : "Sign in with Github";
-  const buttonRoute = authState === AUTH_STATE.AUTHED ? "/dashboard" : "/login";
+  const buttonActionText = authState === AUTH_STATE.AUTHORIZED ? "Go to Dashboard" : "Sign in with Github";
+  const buttonRoute = authState === AUTH_STATE.AUTHORIZED ? "/dashboard" : "/login";
   return (
     <StyledBox>
       <Grid
