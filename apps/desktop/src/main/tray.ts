@@ -28,7 +28,7 @@ async function createTrayWindow() {
   if (app.isPackaged) {
     trayWin.loadURL("https://buildtray.com");
   } else {
-    trayWin.loadURL("http://localhost:3000/tray");
+    trayWin.loadURL("http://localhost:3000/builds");
   }
 }
 

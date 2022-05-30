@@ -127,7 +127,11 @@ export const BuildsList = () => {
 
       const title = `${statusIcon} ${build.fullName} build ${statusText}`;
       const body = `@${build.user.sender} - ${build.commit.message}`;
-      new Notification(title, { body, icon: "/logo.svg" });
+      const notification = new Notification(title, { body, icon: "/logo.svg" });
+      notification.onclick = function (event) {
+        event.preventDefault();
+        window.open(build.url, "_blank");
+      };
 
       // inform electron of latest build status
       window.electron.send("toMain", {

@@ -37,7 +37,7 @@ export default function SignIn() {
 
       if (!result) {
         console.log("Something went wrong with the login");
-        return navigate("/");
+        return navigate("/login");
       }
 
       const credential = GithubAuthProvider.credentialFromResult(result);
@@ -72,7 +72,6 @@ export default function SignIn() {
         pt: 10,
       }}
     >
-      <Typography>Please wait while we log you in</Typography>
       <CircularProgress />
     </Box>
   );

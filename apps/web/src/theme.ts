@@ -11,7 +11,7 @@ let darkTheme = createTheme({
       main: "#db5151",
     },
     primary: {
-      main: "#5A65EA",
+      main: "#0c0c0c",
       contrastText: "#fff",
     },
     text: {
@@ -45,7 +45,7 @@ let lightTheme = createTheme({
       main: "#db5151",
     },
     primary: {
-      main: "#717FCA",
+      main: "#000",
       contrastText: "#fff",
     },
     text: {

@@ -21,8 +21,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
   "& .header-logo": {
     marginRight: 6,
-    width: 28,
-    height: 28,
+    width: 32,
+    height: 32,
   },
 }));
 

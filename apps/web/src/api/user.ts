@@ -57,6 +57,9 @@ export const getAllUserRepos = () => {
   }
 };
 
+/** TODO: remove this
+ * @deprecated remove this
+ */
 export const initialSignin = ({
   githubToken,
   firebaseToken,

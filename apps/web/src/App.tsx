@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./containers/Dashboard";
 import Home from "./containers/Home";
 import SignIn from "./containers/SignIn";
-import Tray from "./containers/Tray";
+import Tray from "./containers/builds";
 import { auth } from "./main";
 import { AUTH_STATE } from "./types/loadingStates";
 
@@ -42,7 +42,7 @@ export default function App() {
 
         <Route path="/" element={<Home />} />
         <Route
-          path="/tray"
+          path="/builds"
           element={
             <ProtectedRoute redirectPath="/">
               <Tray />

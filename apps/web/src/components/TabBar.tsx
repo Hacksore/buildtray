@@ -24,7 +24,7 @@ const tabList: ITabRecord = {
     index: 0,
     name: "Repositories",
   },
-  "/tray": {
+  "/builds": {
     index: 1,
     name: "Builds",
   },
