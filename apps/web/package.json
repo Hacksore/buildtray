@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "vite",
-    "build": "vite build --mode production",
+    "build": "vite build",
     "preview": "vite preview",
     "deploy": "firebase deploy --only hosting --project buildtray",
     "lint": "eslint 'src/**/*.ts'",
