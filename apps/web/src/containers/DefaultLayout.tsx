@@ -1,12 +1,15 @@
 import { Box } from "@mui/material";
 import React from "react";
+import Footer from "../components/Footer";
 import TabBar from "../components/TabBar";
 
-const DefaultLayout = ({ children, tabBar = true }: { children: React.ReactElement, tabBar?: boolean }) => {
+const DefaultLayout = ({ children, tabBar = true }: { children: React.ReactElement; tabBar?: boolean }) => {
   return (
-    <Box sx={{ pt: 8, pb: 8,   height: "calc(100vh - 20px)"  }}>
-      { tabBar && <TabBar /> }
-      <Box sx={{ pl: 1, pr: 1 }}>{children}</Box>
+    <Box sx={{ pt: 8, pb: 8, height: "calc(100vh)" }}>
+      {tabBar && <TabBar />}
+      <Box sx={{ pl: 1, pr: 1, pb: 10  }}>{children}</Box>
+
+      <Footer />
     </Box>
   );
 };
