@@ -35,7 +35,7 @@ export default function App() {
   }, []);
 
   return (
-    <Box>
+    <Box style={{ overflowY: "auto", height: "calc(100vh-20px)" }}>
       <Header />
       <Routes>
         <Route path="/login" element={<SignIn />} />
