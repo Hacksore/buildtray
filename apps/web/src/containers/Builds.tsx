@@ -45,7 +45,7 @@ const Tray = () => {
   };
 
   return (
-    <Box sx={{ p: 1 }}>
+    <Box>
       <Typography variant="body2">This page will show you running and recent builds</Typography>
       {!hasNotification && <Typography>You need to allow permissions to receive notifications</Typography>}
       <BuildsList />

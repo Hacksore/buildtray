@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import {
   GithubAuthProvider,
   signInWithRedirect,

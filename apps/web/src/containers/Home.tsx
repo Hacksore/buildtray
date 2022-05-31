@@ -4,7 +4,7 @@ import DefaultLayout from "./DefaultLayout";
 import { useAppSelector } from "../hooks/redux";
 import { AUTH_STATE } from "../types/loadingStates";
 import { Link } from "react-router-dom";
-
+import IconTwitter from "@mui/icons-material/Twitter"
 const StyledGrid = styled(Grid)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -100,7 +100,6 @@ export default function Home() {
               With <strong>Buildtray</strong> you can subscribe to build events on Github repositories instead of
               relying on platforms like email, slack, and discord.
             </Typography>
-
           </Box>
           <Box>
             <Box sx={{ paddingTop: 1, paddingBottom: 3 }}>
@@ -110,14 +109,21 @@ export default function Home() {
                 </Button>
               ) : (
                 <Link className="link" to={buttonInfo.path}>
-                  <Button variant="outlined" size="large"  sx={{ mr: 1 }}  className="button">
+                  <Button variant="outlined" size="large" sx={{ mr: 1 }} className="button">
                     {buttonInfo.text}
                   </Button>
                 </Link>
               )}
 
-              <Button size="large" sx={{ ml: 1 }} href="https://github.com/Hacksore/buildtray" target="_blank" className="button">
-                Source Code
+              <Button
+                size="large"
+                sx={{ ml: 1 }}
+                href="https://twitter.com/buildtray"
+                target="_blank"
+                className="button"
+                startIcon={<IconTwitter /> }
+              >
+                Share
               </Button>
             </Box>
 
@@ -126,7 +132,7 @@ export default function Home() {
                 src="https://player.vimeo.com/video/715078384?h=6899098143&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                 frameBorder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
-                style={{ position: "absolute", top:0, left: 0, width:"100%", height: "100%" }}
+                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                 title="Buildtray demo"
               ></iframe>
             </div>

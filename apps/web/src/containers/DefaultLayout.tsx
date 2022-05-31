@@ -7,8 +7,7 @@ const DefaultLayout = ({ children, tabBar = true }: { children: React.ReactEleme
   return (
     <Box sx={{ pt: 8, pb: 8, height: "calc(100vh)" }}>
       {tabBar && <TabBar />}
-      <Box sx={{ pl: 1, pr: 1, pb: 10  }}>{children}</Box>
-
+      <Box sx={{ pl: 3, pr: 3, pt: 3, pb: 10  }}>{children}</Box>
       <Footer />
     </Box>
   );

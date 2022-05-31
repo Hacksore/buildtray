@@ -91,11 +91,14 @@ router.get("/repos/all", async (req: any, res) => {
       const safeRepo = safeName(repo);
       const fullName = `${safeEntity}/${safeRepo}`;
       const subscribed = item[repo].subscribed;
+      const installed = isValidRepo(allInstallRepos, fullName);
 
+      // only show installed repos
+      if (!installed) continue;
       repos.push({
         fullName,
         subscribed,
-        installed: isValidRepo(allInstallRepos, fullName),
+        installed
       });
     }
   }

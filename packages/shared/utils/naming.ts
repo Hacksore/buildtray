@@ -1,3 +1,5 @@
+import IAppRepo from "../types/IAppRepo";
+
 /**
  * Replace all occurrences of url characters that can be encoded with their respective url encoding, including period as well
  * @param string a string to sanitized
@@ -45,8 +47,12 @@ export const entityAndRepoToSafeName = (owner: string, repo: string) => {
 /**
  * Is a string a valid repo
  */
-export const isValidRepo = (object: any, fullName: string) => {
+export const isValidRepo = (object: IAppRepo | undefined, fullName: string) => {
   const [entity, repo] = fullName.split("/");
+
+  if (!object || !entity || !repo) {
+    return false;
+  }
 
   if (object[entity] && object[entity][repo]) {
     return true;

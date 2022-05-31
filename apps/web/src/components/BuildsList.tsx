@@ -1,4 +1,4 @@
-import { darken, styled } from "@mui/material";
+import { darken, Skeleton, styled } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -153,11 +153,13 @@ export const BuildsList = () => {
   return (
     <StyledBox>
       <Box className="wrapper">
-        {isReposLoading ? (
-          <Typography>Loading...</Typography>
-        ) : (
-          sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />)
-        )}
+        {isReposLoading
+          ? Array(10)
+              .fill(0)
+              .map((_, idx) => {
+                return <Skeleton key={`skelly-${idx}`} />;
+              })
+          : sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />)}
       </Box>
     </StyledBox>
   );

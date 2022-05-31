@@ -9,7 +9,7 @@ const Settings = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
       <Typography>Settings</Typography>
 
       <Button onClick={handleSignout} variant="contained" color="error">
