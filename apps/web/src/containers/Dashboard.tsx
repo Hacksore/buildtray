@@ -10,7 +10,6 @@ import { RepoFilter } from "../components/RepoFilter";
 import { useSelector } from "react-redux";
 import SubscribeIcon from "@mui/icons-material/NotificationsNone";
 import UnsubscribeIcon from "@mui/icons-material/Notifications";
-
 const StyledBox = styled(Box)(({ theme }) => ({
   "& .item": {
     width: "100%",
@@ -115,7 +114,7 @@ function Dashboard() {
             })}
         </>
       );
-    } 
+    }
     // else if (isSuccess && !hasRepos) {
     //   return (
     //     <Box sx={{ display: "flex", flexDirection: "column", p: 10, alignItems: "center" }}>

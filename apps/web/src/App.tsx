@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./containers/Dashboard";
 import Home from "./containers/Home";
 import SignIn from "./containers/SignIn";
-import Tray from "./containers/builds";
+import Tray from "./containers/Builds";
 import { auth } from "./main";
 import { AUTH_STATE } from "./types/loadingStates";
 

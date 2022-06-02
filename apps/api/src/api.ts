@@ -1,7 +1,8 @@
-import { db } from "./firebase.js";
+import { firestore, db } from "./firebase.js";
 import IBuildInfo from "shared/types/IBuildInfo";
 import { encodeRepo, entityAndRepo } from "shared/utils/naming";
 import { getAllUsersRepos } from "./util/github.js";
+import { doc, setDoc } from "firebase/firestore";
 
 /**
  * Create a new repo entry in the database for each item
@@ -60,32 +61,33 @@ export const removeRepoEntry = items => {
  * @param id github user id
  * @param token github access token
  */
-export const updateAllUsersRepos = async (id, token) => {
-  const path = `users/${id}/repos`;
-  const doc = await db.ref(path).once("value");
-  if (!doc.exists()) {
-    const repos = await getAllUsersRepos(token);
-    const dict = {};
+// TODO: handle errors for this?
+export const updateAllUsersRepos = async (id: number, token: string) => {
+  const allRepos = await getAllUsersRepos(token);
+  const repos = {};
 
-    // this is not pretty to look at :)
-    repos.forEach(item => {
-      const [owner, repo] = entityAndRepo(item.fullName);
-      if (dict[owner] === undefined) {
-        dict[owner] = {
-          [repo]: {
-            subscribed: false,
-          },
-        };
-      } else {
-        dict[owner] = {
-          ...dict[owner],
-          [repo]: {
-            subscribed: false,
-          },
-        };
-      }
-    });
+  // this is not pretty to look at :)
+  allRepos.forEach(item => {
+    const [owner, repo] = entityAndRepo(item.fullName);
+    if (repos[owner] === undefined) {
+      repos[owner] = {
+        [repo]: {
+          subscribed: false,
+        },
+      };
+    } else {
+      repos[owner] = {
+        ...repos[owner],
+        [repo]: {
+          subscribed: false,
+        },
+      };
+    }
+  });
 
-    db.ref(path).set(dict);
-  }
+  // set doc with user data
+  await firestore.collection("Users").doc(`${id}`).set({
+    repos
+  });
+
 };

@@ -33,7 +33,7 @@ const Tray = () => {
 
     // Otherwise, we need to ask the user for permission
     else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(function (permission) {
+      Notification.requestPermission().then(function(permission) {
         // If the user accepts, let's create a notification
         if (permission === "granted") {
           setHasNotification(true);

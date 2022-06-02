@@ -1,7 +1,7 @@
 import { darken, Skeleton, styled } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import clsx from "clsx";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import IBuildInfo from "shared/types/IBuildInfo";
 import { getSubscribedRepos } from "../api/user";
@@ -17,8 +17,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   "& .build": {
     textDecoration: "none",
     color: theme.palette.text.primary,
-    cursor: "pointer",
-    fontWeight: 500,
+    cursor: "pointer", fontWeight: 500,
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(1),
@@ -82,6 +81,7 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
 export const BuildsList = () => {
   const builds = useAppSelector(state => state.builds);
   const dispatch = useAppDispatch();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // REST CALL RETURNS ALL REPOS YOU ARE SUBBED TO
   const { isLoading: isReposLoading, data: subscribedRepos } = useQuery("subscribedRepos", getSubscribedRepos, {
@@ -128,14 +128,18 @@ export const BuildsList = () => {
       const title = `${statusIcon} ${build.fullName} build ${statusText}`;
       const body = `@${build.user.sender} - ${build.commit.message}`;
       const notification = new Notification(title, { body, icon: "/logo.svg" });
-      notification.onclick = function (event) {
+
+      // play some audio
+      (new Audio('/audio/ping.mp3')).play();
+
+      notification.onclick = function(event) {
         event.preventDefault();
         window.open(build.url, "_blank");
       };
 
       // inform electron of latest build status
       window.electron.send("toMain", {
-        status: build.status,
+        status: build.status
       });
     });
 
@@ -155,10 +159,10 @@ export const BuildsList = () => {
       <Box className="wrapper">
         {isReposLoading
           ? Array(10)
-              .fill(0)
-              .map((_, idx) => {
-                return <Skeleton key={`skelly-${idx}`} />;
-              })
+            .fill(0)
+            .map((_, idx) => {
+              return <Skeleton key={`skelly-${idx}`} />;
+            })
           : sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />)}
       </Box>
     </StyledBox>
