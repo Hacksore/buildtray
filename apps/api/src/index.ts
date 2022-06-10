@@ -23,25 +23,40 @@ declare module "express" {
 
 app.use(morgan("combined"));
 
-app.use(
-  session({
-    store: new FirestoreStore({
-      dataset: new Firestore(),
-    }),
-    secret: "my-secret",
-    resave: false,
-    name: "__session",
-    saveUninitialized: false,
-  })
-);
+// dev moiddleware
+if (process.env.NODE_ENV !== "production") {
+  app.use((req, res, next) => {
+    req.session = {
+      github: {
+        user: {
+          id: 996134
+        }
+      }
+    }
+    next();
+  });
+} else {
+  app.use(
+    session({
+      store: new FirestoreStore({
+        dataset: new Firestore(),
+      }),
+      secret: "my-secret",
+      resave: false,
+      name: "__session",
+      saveUninitialized: false,
+    })
+  );
+}
 
 app.use(express.json());
+
 
 // login route
 app.use("/api/v1", loginRoute);
 
 // product all the main routes
-app.use(authenticate);
+// app.use(authenticate);
 
 router.use(repoRoute);
 router.use(webhookRoute);

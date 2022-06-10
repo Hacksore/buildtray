@@ -130,7 +130,7 @@ export const BuildsList = () => {
       const notification = new Notification(title, { body, icon: "/logo.svg" });
 
       // play some audio
-      (new Audio('/audio/ping.mp3')).play();
+      // (new Audio('/audio/ping.mp3')).play();
 
       notification.onclick = function(event) {
         event.preventDefault();

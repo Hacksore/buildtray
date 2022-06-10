@@ -8,16 +8,22 @@ import { doc, setDoc } from "firebase/firestore";
  * Create a new repo entry in the database for each item
  * @param items list of repos from github
  */
+// TODO: type this from github api res
 export const createOrUpdateRepoEntry = items => {
+
+  const ref = firestore.doc("Repos/installed");
+
   items.forEach(item => {
     const fullName = encodeRepo(item.full_name);
-    db.ref(`repos/${fullName}`).set({
+    ref.collection(fullName).add({
       metadata: {
         fullName: item.full_name,
         private: item.private,
       },
     });
   });
+
+  // ref.create(repos);
 };
 
 /**
@@ -71,23 +77,24 @@ export const updateAllUsersRepos = async (id: number, token: string) => {
     const [owner, repo] = entityAndRepo(item.fullName);
     if (repos[owner] === undefined) {
       repos[owner] = {
-        [repo]: {
-          subscribed: false,
-        },
+        [repo]: false,
       };
     } else {
       repos[owner] = {
         ...repos[owner],
-        [repo]: {
-          subscribed: false,
-        },
+        [repo]: false,
       };
     }
   });
 
-  // set doc with user data
-  await firestore.collection("Users").doc(`${id}`).set({
-    repos
-  });
+  await setUserMetadata(id, "repos", repos);
+};
 
+export const setUserMetadata = (id: string | number, path: string, data: any) => {
+  const userCol = firestore.collection("Users");
+  const userDocRef = userCol.doc(`${id}`);
+  const metadataCol = userDocRef.collection("metadata");
+
+  const repoDoc = metadataCol.doc(path);
+  return repoDoc.set(data);
 };
