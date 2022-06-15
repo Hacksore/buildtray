@@ -16,7 +16,7 @@ export const store = configureStore({
     // TODO: rename
     builds: buildsReducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
 
 export type AuthState = ReturnType<typeof store.getState>;

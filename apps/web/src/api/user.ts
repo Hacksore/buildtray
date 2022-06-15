@@ -76,6 +76,18 @@ export const initialSignin = ({
   });
 };
 
+/**
+ * Get the user info
+ * @returns
+ */
+ export const getUserInfo = () => {
+  try {
+    return _request("/me");
+  } catch (err) {
+    return Promise.reject("Error");
+  }
+}
+
 export const _request = async (path: string, options: RequestInit = {}) => {
   const auth = getAuth(app);
   const accesstToken = await auth.currentUser?.getIdToken();

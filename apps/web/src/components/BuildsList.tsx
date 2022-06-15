@@ -81,67 +81,7 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
 
 export const BuildsList = () => {
   const builds = useAppSelector(state => state.builds);
-  const dispatch = useAppDispatch();
-
-  // REST CALL RETURNS ALL REPOS YOU ARE SUBBED TO
-  const { isLoading: isReposLoading, data: subscribedRepos } = useQuery("subscribedRepos", getSubscribedRepos, {
-    initialData: [],
-  });
-
-  // watch for repo builds i've subbed to
-  useEffect(() => {
-    if (!subscribedRepos || subscribedRepos.length === 0) return;
-
-    // get all repos I have subbed to
-    subscribedRepos.forEach(async (repo: IBuildInfo) => {
-      // get recent builds
-      const recentBuilds: IBuildInfo[] = await firebaseService.getMostRecentBuilds(repo.fullName);
-      for (const build of recentBuilds) {
-        dispatch(addBuild(build));
-      }
-
-      // sub for builds events
-      firebaseService.subscribeToRepo(repo.fullName);
-    });
-
-    // listen for events
-    firebaseService.on("build", (build: IBuildInfo) => {
-      // getting builds now let's send to redux
-      if (build.status === "queued") {
-        dispatch(addBuild(build));
-      } else if (build.status === "completed" || build.status === "failure") {
-        dispatch(updateBuild(build));
-      }
-
-      // spawn notification
-      let statusIcon = "⏳";
-      let statusText = "started";
-      if (build.conclusion === "success") {
-        statusIcon = "✅";
-        statusText = "completed";
-      }
-      if (build.conclusion === "failure") {
-        statusIcon = "🛑";
-        statusText = "failed";
-      }
-
-      const title = `${statusIcon} ${build.fullName} build ${statusText}`;
-      const body = `@${build.user.sender} - ${build.commit.message}`;
-      const notification = new Notification(title, { body, icon: "/logo.svg" });
-      notification.onclick = function (event) {
-        event.preventDefault();
-        window.open(build.url, "_blank");
-      };
-
-      // inform electron of latest build status
-      window.electron.send("toMain", {
-        status: build.status,
-      });
-    });
-
-    return () => firebaseService.clearAllListeners();
-  }, [subscribedRepos]);
-
+  
   const sortedBuilds = [...builds].sort((a: IBuildInfo) => {
     if (a.status === "queued") {
       return -1;
@@ -153,13 +93,7 @@ export const BuildsList = () => {
   return (
     <StyledBox>
       <Box className="wrapper">
-        {isReposLoading
-          ? Array(10)
-              .fill(0)
-              .map((_, idx) => {
-                return <Skeleton key={`skelly-${idx}`} />;
-              })
-          : sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />)}
+        { sortedBuilds.map((build: IBuildInfo, id) => <ListItem key={`${build.id}-${id}`} {...build} />) }
       </Box>
     </StyledBox>
   );

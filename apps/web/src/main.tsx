@@ -1,5 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
@@ -11,6 +10,7 @@ import { getAuth } from "firebase/auth";
 import { BrowserRouter } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { lightTheme } from "./theme";
+import React from "react";
 
 // TODO: move these to env maybe?
 const firebaseConfig = {
@@ -38,7 +38,12 @@ export const queryClient = new QueryClient({
   },
 });
 
-ReactDOM.render(
+const container = document.getElementById("root");
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!);
+
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -50,6 +55,5 @@ ReactDOM.render(
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

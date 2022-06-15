@@ -36,7 +36,7 @@ export const RepoFilter = () => {
     <Box sx={{ mt: 2, mb: 2 }}>
       <Grid container spacing={2}>
         <Grid item>
-          <FormControl fullWidth sx={{ m: 1 }}>
+          <FormControl sx={{ m: 1 }}>
             <TextField
               inputRef={searchFieldRef}
               onChange={onTextFieldChange}

@@ -21,6 +21,8 @@ declare module "express" {
   }
 }
 
+const SESSION_SECRET = "ayylmao";
+
 app.use(morgan("combined"));
 
 app.use(
@@ -28,7 +30,7 @@ app.use(
     store: new FirestoreStore({
       dataset: new Firestore(),
     }),
-    secret: "my-secret",
+    secret: SESSION_SECRET,
     resave: false,
     name: "__session",
     saveUninitialized: false,
@@ -40,7 +42,7 @@ app.use(express.json());
 // login route
 app.use("/api/v1", loginRoute);
 
-// product all the main routes
+// protect all the main routes
 app.use(authenticate);
 
 router.use(repoRoute);

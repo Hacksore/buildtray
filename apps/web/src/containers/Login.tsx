@@ -10,34 +10,35 @@ import {
 import { useNavigate } from "react-router-dom";
 import { initialSignin } from "../api/user";
 import { auth } from "../main";
-import { useAppSelector } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { appSlice } from "../reducers/mainSlice";
 import { AUTH_STATE } from "../types/loadingStates";
 
-export default function SignIn() {
+const { setAuthState } = appSlice.actions;
+
+
+export default function Login() {
   const navigate = useNavigate();
   const authState = useAppSelector(state => state.main.authState);
+  const dispatch = useAppDispatch();
 
   const signInWithGithub = async () => {
     const provider = new GithubAuthProvider();
+
+    // set persisintance to loacal storage
+    await setPersistence(auth, browserLocalPersistence);
     signInWithRedirect(auth, provider);
   };
 
   const handleAuthFlow = async () => {
     try {
-
       // enabled persistance
-      await setPersistence(auth, browserLocalPersistence);
       const result = await getRedirectResult(auth);
+      console.log("RESULT FROM SIGNIN", result, authState);
 
       // we did not get a result so we should sign in :)
-      if (authState === AUTH_STATE.UNAUTHORIZED) {
-        console.log("User is either UNAUTHORIZED or the redirect did not have a user");
+      if (!result) {        
         return signInWithGithub();
-      }
-
-      if (!result) {
-        console.log("Something went wrong with the login");
-        return navigate("/login");
       }
 
       const credential = GithubAuthProvider.credentialFromResult(result);
@@ -51,6 +52,7 @@ export default function SignIn() {
         });
 
         // redirect to the dashboard
+        dispatch(setAuthState(AUTH_STATE.AUTHORIZED));
         navigate("/dashboard");
       }
     } catch (err) {
@@ -60,7 +62,7 @@ export default function SignIn() {
 
   useEffect(() => {
     handleAuthFlow();
-  }, [authState]);
+  }, []);
 
   return (
     <Box

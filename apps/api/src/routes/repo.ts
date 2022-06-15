@@ -98,7 +98,7 @@ router.get("/repos/all", async (req: any, res) => {
       repos.push({
         fullName,
         subscribed,
-        installed
+        installed,
       });
     }
   }

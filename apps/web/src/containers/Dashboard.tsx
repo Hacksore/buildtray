@@ -9,7 +9,8 @@ import { unsafeName } from "shared/utils/naming";
 import { RepoFilter } from "../components/RepoFilter";
 import { useSelector } from "react-redux";
 import SubscribeIcon from "@mui/icons-material/NotificationsNone";
-import UnsubscribeIcon from "@mui/icons-material/Notifications";
+import UnsubscribeIcon from '@mui/icons-material/Notifications';
+
 
 const StyledBox = styled(Box)(({ theme }) => ({
   "& .item": {
@@ -115,7 +116,7 @@ function Dashboard() {
             })}
         </>
       );
-    } 
+    }
     // else if (isSuccess && !hasRepos) {
     //   return (
     //     <Box sx={{ display: "flex", flexDirection: "column", p: 10, alignItems: "center" }}>
@@ -148,10 +149,10 @@ function Dashboard() {
     <StyledBox sx={{ display: "flex", flexDirection: "column" }}>
       {isLoading
         ? Array(10)
-            .fill(0)
-            .map((_, idx) => {
-              return <Skeleton key={`skelly-${idx}`} />;
-            })
+          .fill(0)
+          .map((_, idx) => {
+            return <Skeleton key={`skelly-${idx}`} />;
+          })
         : renderReposAndFilter()}
     </StyledBox>
   );

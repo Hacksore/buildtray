@@ -7,7 +7,7 @@ import DefaultLayout from "./DefaultLayout";
 
 const { clearBuilds } = buildSlice.actions;
 
-const Tray = () => {
+const Builds = () => {
   const [hasNotification, setHasNotification] = useState(false);
   const dispatch = useDispatch();
 
@@ -56,7 +56,7 @@ const Tray = () => {
 export default () => {
   return (
     <DefaultLayout>
-      <Tray />
+      <Builds />
     </DefaultLayout>
   );
 };
