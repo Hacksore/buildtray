@@ -1,8 +1,8 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { Link, useLocation } from "react-router-dom";
 import { styled } from "@mui/material";
+import Link from "next/link";
 
 function a11yProps(index: number) {
   return {
@@ -48,20 +48,17 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 export default function TabBar() {
-  const location = useLocation();
   const path = location.pathname;
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tabList[path].index} aria-label="dashboard tabs">
-          {Object.entries(tabList).map(([path, item]: [string, ITabItem]) => (
-            <StyledLink key={path} to={path}>
-              <StyledTab label={item.name} {...a11yProps(0)} />
-            </StyledLink>
-          ))}
-        </Tabs>
-      </Box>
+      <Tabs value={tabList[path].index}>
+        {Object.entries(tabList).map(([path, item]: [string, ITabItem]) => (
+          <StyledLink key={path} to={path}>
+            <StyledTab label={item.name} {...a11yProps(0)} />
+          </StyledLink>
+        ))}
+      </Tabs>
     </Box>
   );
 }

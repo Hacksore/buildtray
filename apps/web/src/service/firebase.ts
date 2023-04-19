@@ -10,7 +10,7 @@ import {
   startAfter,
 } from "firebase/database";
 import { EventEmitter } from "events";
-import { database } from "../main";
+import { database } from "../firebase";
 
 import { encodeRepo } from "shared/utils/naming";
 import IBuildInfo from "shared/types/IBuildInfo";
@@ -19,7 +19,6 @@ declare interface FirebaseService {
 }
 
 class FirebaseService extends EventEmitter {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public listeners: any = [];
 
   /**

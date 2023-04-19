@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import { useQuery } from "react-query";
 import IBuildInfo from "shared/types/IBuildInfo";
 import { getSubscribedRepos } from "../api/user";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import firebaseService from "service/firebase";
+import firebaseService from "../service/firebase";
 import { buildSlice } from "../reducers/buildReducer";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const { addBuild, updateBuild } = buildSlice.actions;
 
@@ -53,18 +53,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const handleElectronLaunch = (event: React.MouseEvent, url: string) => {
-  if (window.electron !== undefined) {
-    event.preventDefault();
-    window.electron.openInBrowser(url);
-  }
-};
-
 const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBuildInfo) => {
   const timeAgo = moment.unix(createdAt).fromNow();
   const iconClass = status === "queued" ? "queued" : conclusion;
   return (
-    <a onClick={event => handleElectronLaunch(event, url)} target="__blank" href={url} className="build">
+    <a target="__blank" href={url} className="build">
       <Box className="title">
         <Box className={clsx("status-icon", { [iconClass]: true })} />
         <Typography>{fullName}</Typography>
@@ -80,7 +73,7 @@ const ListItem = ({ fullName, status, conclusion, commit, createdAt, url }: IBui
 };
 
 export const BuildsList = () => {
-  const builds = useAppSelector(state => state.builds);
+  const builds = useSelector((state: any) => state.builds);
   
   const sortedBuilds = [...builds].sort((a: IBuildInfo) => {
     if (a.status === "queued") {

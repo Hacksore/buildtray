@@ -103,8 +103,6 @@ router.get("/repos/all", async (req: any, res) => {
     }
   }
 
-  console.log("get all repos");
-
   const stortedResposne = repos
     .sort((a: IRepo, b: IRepo) => b.fullName.localeCompare(a.fullName))
     .sort((a: IRepo) => (a.installed ? -1 : 1));

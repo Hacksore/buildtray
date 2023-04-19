@@ -3,12 +3,11 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../main";
-import { Link } from "react-router-dom";
+import { auth } from "../firebase";
 import { Button, Skeleton, styled } from "@mui/material";
 import { AUTH_STATE } from "../types/loadingStates";
-import { useAppSelector } from "../hooks/redux";
+import Link from "next/link";
+import { useSelector } from "react-redux";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -29,7 +28,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 const UserButton = ({ state, user }: { state: AUTH_STATE; user: any }) => {
   if (state === AUTH_STATE.AUTHORIZED) {
     return (
-      <Link className="header-link" to="/dashboard">
+      <Link className="header-link" href="/dashboard">
         <Button style={{ textTransform: "none" }} size="small" color="inherit">
           <Typography variant="h6" sx={{ mr: 1 }}>
             {user?.displayName}
@@ -42,7 +41,7 @@ const UserButton = ({ state, user }: { state: AUTH_STATE; user: any }) => {
 
   if (state === AUTH_STATE.UNAUTHORIZED) {
     return (
-      <Link className="header-link" to="/login">
+      <Link className="header-link" href="/login">
         <Button style={{ textTransform: "none" }} size="small" color="inherit">
           <Typography variant="h6" sx={{ mr: 1 }}>
             Sign in with Github
@@ -60,15 +59,16 @@ const UserButton = ({ state, user }: { state: AUTH_STATE; user: any }) => {
 };
 
 export default function Header() {
-  const [user] = useAuthState(auth);
-  const authState = useAppSelector(state => state.main.authState);
+  const user = null;
+  const authState = useSelector((state: any) => state.main.authState);
 
   return (
     <StyledBox>
       <AppBar elevation={0} className="header" classes={{ root: "header" }} position="fixed">
         <Toolbar disableGutters classes={{ root: "toolbar" }}>
           <Typography variant="h6" noWrap component="div">
-            <Link className="header-link" to="/">
+            <Link className="header-link" href="/">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="header-logo" src="/logo.svg" alt="logo" />
               Buildtray
             </Link>

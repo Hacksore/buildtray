@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { app } from "../main";
+import { app } from "../firebase";
 
 /**
  * All the user repos that have been subbed
@@ -75,18 +75,6 @@ export const initialSignin = ({
     body: JSON.stringify({ githubToken, firebaseToken }),
   });
 };
-
-/**
- * Get the user info
- * @returns
- */
- export const getUserInfo = () => {
-  try {
-    return _request("/me");
-  } catch (err) {
-    return Promise.reject("Error");
-  }
-}
 
 export const _request = async (path: string, options: RequestInit = {}) => {
   const auth = getAuth(app);
